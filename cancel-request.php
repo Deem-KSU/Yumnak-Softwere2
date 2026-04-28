@@ -25,8 +25,15 @@ $sql = "
 
 $stmt = mysqli_prepare($conn, $sql);
 mysqli_stmt_bind_param($stmt, "ii", $requestID, $travelerID);
-mysqli_stmt_execute($stmt);
+if (mysqli_stmt_execute($stmt)) {
+    if (mysqli_stmt_affected_rows($stmt) > 0) {
+        header("Location: my-requests.php?msg=cancelled");
+    } else {
+        header("Location: my-requests.php?msg=failed");
+    }
+} else {
+    die("Error: " . mysqli_error($conn));
+}
 
-header("Location: my-requests.php");
 exit();
 ?>

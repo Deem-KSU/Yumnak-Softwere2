@@ -78,6 +78,15 @@ function statusClass($status) {
   </header>
 
   <main class="container">
+    <?php
+if (isset($_GET['msg']) && $_GET['msg'] == 'cancelled') {
+    echo "<script>alert('Request cancelled successfully');</script>";
+}
+
+if (isset($_GET['msg']) && $_GET['msg'] == 'failed') {
+    echo "<script>alert('Request could not be cancelled');</script>";
+}
+?>
     <h1>My Assistance Requests</h1>
     <p class="subtitle">
       Track the status and details of your submitted assistance requests.
