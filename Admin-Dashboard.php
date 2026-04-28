@@ -36,14 +36,22 @@ if ($totalRequests > 0) {
     $completedPercentage = 0; 
 }
 
-// Calculate Available Assistants
-// Find out how many assistants are currently busy with an "Accepted" request
-$busyQuery = "SELECT COUNT(DISTINCT AssistantID) AS busy_count FROM ASSISTANCE_REQUEST WHERE Status = 'Accepted' AND AssistantID IS NOT NULL";
+$busyQuery = "
+    SELECT COUNT(DISTINCT AssistantID) AS busy_count 
+    FROM ASSISTANCE_REQUEST 
+    WHERE Status = 'Accepted' 
+    AND AssistantID IS NOT NULL 
+    AND DATE(PreferredTime) = CURRENT_DATE()
+";
 $busyResult = mysqli_query($conn, $busyQuery);
 $busyAssistants = mysqli_fetch_assoc($busyResult)['busy_count'];
 
-// Math: Total Assistants minus Busy Assistants
+// Math: Total Assistants minus Assistants booked for today
 $availableAssistants = $totalAssistants - $busyAssistants;
+
+$todayQuery = "SELECT COUNT(*) AS count FROM ASSISTANCE_REQUEST WHERE DATE(PreferredTime) = CURRENT_DATE()";
+$todayResult = mysqli_query($conn, $todayQuery);
+$requestsToday = mysqli_fetch_assoc($todayResult)['count'];
 ?>
 <!DOCTYPE html>
 <html lang="ar" dir="ltr">
@@ -131,7 +139,7 @@ $availableAssistants = $totalAssistants - $busyAssistants;
               <div class="stat-icon requests-icon">
                 <i class="fa-solid fa-list-check"></i>
               </div>
-              <span class="stat-tag green-tag">+12%</span>
+              <span class="stat-tag green-tag">Today: +<?php echo $requestsToday; ?></span>
             </div>
             <h3><?php echo $totalRequests; ?></h3>
             <p>Total Requests</p>
@@ -142,7 +150,7 @@ $availableAssistants = $totalAssistants - $busyAssistants;
               <div class="stat-icon pending-icon">
                 <i class="fa-regular fa-clock"></i>
               </div>
-              <span class="stat-tag orange-tag">Active</span>
+              <!--<span class="stat-tag orange-tag">Active</span>-->
             </div>
             <h3><?php echo $pendingRequests; ?></h3>
             <p>Pending Requests</p>
@@ -164,7 +172,7 @@ $availableAssistants = $totalAssistants - $busyAssistants;
               <div class="stat-icon assistants-icon">
                 <i class="fa-solid fa-user-group"></i>
               </div>
-              <span class="stat-tag blue-tag">24 Available</span>
+              <span class="stat-tag blue-tag"><?php echo $availableAssistants; ?> Available</span>
             </div>
             <h3><?php echo $totalAssistants; ?></h3>
             <p>Total Assistants</p>
