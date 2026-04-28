@@ -1,13 +1,5 @@
 <?php
-$host = 'localhost:8889';
-$db = 'YumnakDB';
-$user = 'root';
-$pass = 'root';
-
-$conn = new mysqli($host, $user, $pass, $db);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+require 'db_connection.php';
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_assistant'])) {
     $name = $_POST['fullname'];
     $phone = $_POST['phone'];

@@ -1,13 +1,5 @@
 <?php
-$host = 'localhost:8889';
-$db = 'YumnakDB';
-$user = 'root';
-$pass = 'root';
-
-$conn = new mysqli($host, $user, $pass, $db);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+require 'db_connection.php';
 
 $assistant_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 

@@ -1,13 +1,6 @@
 <?php
-$host = 'localhost:8889';
-$db = 'YumnakDB';
-$user = 'root';
-$pass = 'root';
+require 'db_connection.php';
 
-$conn = new mysqli($host, $user, $pass, $db);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
 if (isset($_GET['delete_id'])) {
     $delete_id = $_GET['delete_id'];
     $stmt = $conn->prepare("DELETE FROM ASSISTANT WHERE AssistantID = ?");

@@ -1,13 +1,6 @@
 <?php
-$host = 'localhost:8889';
-$db = 'YumnakDB';
-$user = 'root';
-$pass = 'root';
+require 'db_connection.php';
 
-$conn = new mysqli($host, $user, $pass, $db);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
 $sql = "SELECT a.AssistantID, a.Name, a.Phone, a.Email, a.Specialization,
         (SELECT COUNT(*) FROM ASSISTANCE_REQUEST ar WHERE ar.AssistantID = a.AssistantID AND ar.Status = 'Completed') AS CompletedCount,
         (SELECT ROUND(AVG(r.Stars), 1) FROM REVIEW r JOIN ASSISTANCE_REQUEST ar ON r.RequestID = ar.RequestID WHERE ar.AssistantID = a.AssistantID) AS AvgRating
