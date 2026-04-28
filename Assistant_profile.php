@@ -9,7 +9,6 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// التأكد من وجود ID في الرابط
 $assistant_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($assistant_id == 0) {
@@ -17,7 +16,6 @@ if ($assistant_id == 0) {
     exit();
 }
 
-// جلب معلومات المساعد الأساسية
 $stmt = $conn->prepare("SELECT * FROM ASSISTANT WHERE AssistantID = ?");
 $stmt->bind_param("i", $assistant_id);
 $stmt->execute();
@@ -29,7 +27,6 @@ if ($assistant_result->num_rows == 0) {
 }
 $assistant = $assistant_result->fetch_assoc();
 
-// جلب الإحصائيات
 $stats_sql = "SELECT
     (SELECT COUNT(*) FROM ASSISTANCE_REQUEST WHERE AssistantID = $assistant_id AND Status = 'Completed') AS CompletedCount,
     (SELECT COUNT(*) FROM ASSISTANCE_REQUEST WHERE AssistantID = $assistant_id AND Status IN ('Pending', 'Accepted')) AS AssignedCount,
@@ -38,7 +35,6 @@ $stats_result = $conn->query($stats_sql);
 $stats = $stats_result->fetch_assoc();
 $rating = $stats['AvgRating'] ? $stats['AvgRating'] : "0.0";
 
-// جلب التقييمات
 $reviews_sql = "SELECT r.Stars, r.Comment, r.Date, ar.RequestID, t.UserName 
                 FROM REVIEW r 
                 JOIN ASSISTANCE_REQUEST ar ON r.RequestID = ar.RequestID 
@@ -46,7 +42,6 @@ $reviews_sql = "SELECT r.Stars, r.Comment, r.Date, ar.RequestID, t.UserName
                 WHERE ar.AssistantID = $assistant_id";
 $reviews_result = $conn->query($reviews_sql);
 
-// جلب الطلبات المسندة
 $requests_sql = "SELECT ar.RequestID, a.AirportName, ar.Date, ar.Status, aty.AssistanceName 
                  FROM ASSISTANCE_REQUEST ar 
                  JOIN GATE g ON ar.GateID = g.GateID 
@@ -173,7 +168,7 @@ $requests_result = $conn->query($requests_sql);
                     <?php 
                     if ($requests_result->num_rows > 0) {
                         while($req = $requests_result->fetch_assoc()) { 
-                            $statusClass = strtolower($req['Status']); // لربط الألوان بالـ CSS
+                            $statusClass = strtolower($req['Status']); 
                     ?>
                     <tr>
                         <td>REQ-<?php echo $req['RequestID']; ?></td>
