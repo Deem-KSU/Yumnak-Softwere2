@@ -2,13 +2,14 @@
 session_start();
 require 'db_connection.php';
 
-if (!isset($_SESSION['user_id'])) {
+/*if (!isset($_SESSION['user_id'])) {
     header("Location: LogIn.html");
     exit();
 }
 
 $travelerID = $_SESSION['user_id'];
-
+*/
+$travelerID = 1;
 $sql = "
     SELECT 
         ar.RequestID,
