@@ -24,7 +24,7 @@ CREATE TABLE ADMIN (
 CREATE TABLE AIRPORT (
     AirportID INT(11) AUTO_INCREMENT PRIMARY KEY,
     AirportName VARCHAR(150) NOT NULL,
-    City VARCHAR(100) NOT NULL
+    City VARCHAR(100) NOT NULL,
     ImagePath VARCHAR(255) NOT NULL
 );
 
@@ -112,7 +112,7 @@ INSERT INTO ADMIN (UserName, Email, Phone, Password, DOB) VALUES
 ('Khalid Abdullah', 'khalid.admin@yumnak.com', '+966555123456', '$2a$12$9xBAvl0GP0Ni9hBxcwwy7OO32gQ56Y1opaTP32pGZ8M0BGaBqcTOS', '1988-02-20');
 
 -- Insert All 28 Saudi Airports
-INSERT INTO AIRPORT (AirportName, City) VALUES
+INSERT INTO AIRPORT (AirportName, City, ImagePath) VALUES
 ('King Khalid International Airport', 'Riyadh', 'Image/Riyadh.jpg'),
 ('King Abdulaziz International Airport', 'Jeddah', 'Image/Jeddah.jpg'),
 ('King Fahd International Airport', 'Dammam', 'Image/Dammam.jpg'),
