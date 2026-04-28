@@ -1,6 +1,27 @@
+<?php
+$host = 'localhost:8889';
+$db = 'YumnakDB';
+$user = 'root';
+$pass = 'root';
+
+$conn = new mysqli($host, $user, $pass, $db);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+if (isset($_GET['delete_id'])) {
+    $delete_id = $_GET['delete_id'];
+    $stmt = $conn->prepare("DELETE FROM ASSISTANT WHERE AssistantID = ?");
+    $stmt->bind_param("i", $delete_id);
+    if ($stmt->execute()) {
+        echo "<script>alert('The Assistant Deleted Successfully'); window.location.href='Assistant_Management.php';</script>";
+    }
+    $stmt->close();
+}
+
+$result = $conn->query("SELECT * FROM ASSISTANT");
+?>
 <!DOCTYPE html>
 <html lang="ar" dir="ltr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,33 +37,31 @@
         </div>
         <div class="logout">
             <button onclick="window.location.href='LogIn.html'">
-                <i class="fas fa-sign-out-alt"></i>
-                Logout
+                <i class="fas fa-sign-out-alt"></i> Logout
             </button>
         </div>
     </header>
 
     <div class="container">
         <aside class="sidebar">
-            <a href="Admin-Dashboard.html" class="sidebar-item">
-                <i class="fa-solid fa-chart-line"></i> Dashboard
-            </a>
-            <a href="request-management.html" class="sidebar-item">
-                <i class="fa-solid fa-clipboard-list"></i> Request Management
-            </a>
-            <a href="Assistant_Management.html" class="sidebar-item active">
-                <i class="fa-solid fa-users"></i> Assistant Management
-            </a>
-            <a href="view-requests.html" class="sidebar-item">
-                <i class="fa-solid fa-clock-rotate-left"></i> View Requests
-            </a>
-            <a href="Weekly_Performance.html" class="sidebar-item">
-                <i class="fa-solid fa-file-lines"></i> Weekly Performance Report
-            </a>
-        </aside>
+    <a href="Admin-Dashboard.html" class="sidebar-item">
+        <i class="fa-solid fa-chart-line"></i> Dashboard
+    </a>
+    <a href="request-management.html" class="sidebar-item">
+        <i class="fa-solid fa-clipboard-list"></i> Request Management
+    </a>
+    <a href="Assistant_Management.php" class="sidebar-item">
+        <i class="fa-solid fa-users"></i> Assistant Management
+    </a>
+    <a href="view-requests.html" class="sidebar-item">
+        <i class="fa-solid fa-clock-rotate-left"></i> View Requests
+    </a>
+    <a href="Weekly_Performance.php" class="sidebar-item active">
+        <i class="fa-solid fa-file-lines"></i> Weekly Performance Report
+    </a>
+</aside>
 
         <main class="main-content">
-
             <div class="headline">
                 <h1>Assistant Management</h1>
                 <p>Manage assistants, Monitor their availability.</p>
@@ -53,7 +72,7 @@
                     <i class="fa-solid fa-magnifying-glass"></i>
                     <input type="text" placeholder="Search assistant by name or specialization">
                 </div>
-                <button class="btn-add" id="addAssistantBtn"><i class="fa-solid fa-plus"></i> Add Assistant</button>
+                <button class="btn-add" onclick="window.location.href='Add_Assistant.php'"><i class="fa-solid fa-plus"></i> Add Assistant</button>
             </div>
 
             <div class="table-container">
@@ -68,119 +87,76 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <?php 
+                        // حلقة تكرار لعرض كل صف من قاعدة البيانات
+                        if ($result->num_rows > 0) {
+                            while($row = $result->fetch_assoc()) { 
+                                // دالة بسيطة لإنشاء الصورة ديناميكياً من الاسم
+                                $avatarUrl = "https://ui-avatars.com/api/?name=" . urlencode($row['Name']) . "&background=random";
+                        ?>
                         <tr>
                             <td>
                                 <div class="user-info">
-                                    <img src="https://ui-avatars.com/api/?name=Mary+Usama&background=random"
-                                        alt="Avatar">
+                                    <img src="<?php echo $avatarUrl; ?>" alt="Avatar">
                                     <div>
-                                        <div class="name">Maryam Usama</div>
-                                        <div class="id">ID: AS001</div>
+                                        <div class="name"><?php echo htmlspecialchars($row['Name']); ?></div>
+                                        <div class="id">ID: AS00<?php echo htmlspecialchars($row['AssistantID']); ?></div>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <div class="contact-info">
-                                    <span>+966 50 022 651</span>
-                                    <span class="email">Maryu1123@yumnak.com</span>
+                                    <span><?php echo htmlspecialchars($row['Phone']); ?></span>
+                                    <span class="email"><?php echo htmlspecialchars($row['Email']); ?></span>
                                 </div>
                             </td>
-                            <td>Wheelchair Assistance</td>
-                            <td><button class="btn-delete"><i class="fa-solid fa-trash-can"></i></button></td>
+                            <td><?php echo htmlspecialchars($row['Specialization']); ?></td>
+                            <td>
+                                <a href="?delete_id=<?php echo $row['AssistantID']; ?>" class="btn-delete" onclick="return confirm('Are You Sure You Want To Delete This Assistant?');">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </a>
+                            </td>
                         </tr>
-                        <tr>
-                            <td>
-                                <div class="user-info">
-                                    <img src="https://ui-avatars.com/api/?name=Lat+Jas&background=random" alt="Avatar">
-                                    <div>
-                                        <div class="name">Latifah jassir</div>
-                                        <div class="id">ID: AS002</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="contact-info">
-                                    <span>+966 55 867 221</span>
-                                    <span class="email">Tetobe1@yumnak.com</span>
-                                </div>
-                            </td>
-                            <td>Language Support</td>
-                            <td><button class="btn-delete"><i class="fa-solid fa-trash-can"></i></button></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="user-info">
-                                    <img src="https://ui-avatars.com/api/?name=Khalid+Altmimi&background=random"
-                                        alt="Avatar">
-                                    <div>
-                                        <div class="name">Khalid Altmimi</div>
-                                        <div class="id">ID: AS003</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="contact-info">
-                                    <span>+966 53 222 145</span>
-                                    <span class="email"> Khalid@yumnak.com</span>
-                                </div>
-                            </td>
-                            <td>Navigation Guide</td>
-                            <td><button class="btn-delete"><i class="fa-solid fa-trash-can"></i></button></td>
-                        </tr>
+                        <?php 
+                            }
+                        } else {
+                            echo "<tr><td colspan='4'>No Assistants Found.</td></tr>";
+                        }
+                        ?>
                     </tbody>
                 </table>
             </div>
         </main>
     </div>
     <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h4>Contact Us</h4>
-                <p><i class="fas fa-envelope"></i> support@yumnak.com</p>
-                <div class="social-icons">
-                    <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
-                    <a href="#"><i class="fab fa-linkedin"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-
-            <div class="footer-section">
-                <h4>Quick Links</h4>
-                <ul class="footer-links">
-                    <li><a href="#">Sitemap</a></li>
-                    <li><a href="Admin-Dashboard.html">Dashboard</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-section about-yumnak">
-                <h4>About Yumnak</h4>
-                <p>Your companion for a world without barriers, making every journey at the airport easier and more
-                    inclusive.</p>
+    <div class="footer-content">
+        <div class="footer-section">
+            <h4>Contact Us</h4>
+            <p><i class="fas fa-envelope"></i> support@yumnak.com</p>
+            <div class="social-icons">
+                <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
             </div>
         </div>
 
-        <div class="footer-bottom">
-            &copy; 2026 Yumnak Platform. All rights reserved.
+        <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul class="footer-links">
+                <li><a href="#">Sitemap</a></li>
+                <li><a href="Admin-Dashboard.html">Dashboard</a></li>
+            </ul>
         </div>
-    </footer>
-    <script>
-        document.getElementById('addAssistantBtn').onclick = function () {
-            window.location.href = 'Add_Assistant.html';
-        };
-        const deleteButtons = document.querySelectorAll('.btn-delete');
 
-        deleteButtons.forEach(button => {
-            button.onclick = function () {
-                const confirmDelete = confirm("Are You Sure You Want To Delete This Assistant?");
-
-                if (confirmDelete) {
-                    const row = this.closest('tr');
-                    row.remove();
-                    alert("The Assistant Deleted");
-                }
-            };
-        });
-    </script>
+        <div class="footer-section about-yumnak">
+            <h4>About Yumnak</h4>
+            <p>Your companion for a world without barriers, making every journey at the airport easier and more inclusive.</p>
+        </div>
+    </div>
+    
+    <div class="footer-bottom">
+        &copy; 2026 Yumnak Platform. All rights reserved.
+    </div>
+</footer>
 </body>
-
 </html>
