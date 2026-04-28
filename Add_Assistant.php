@@ -47,13 +47,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_assistant'])) {
     <a href="request-management.html" class="sidebar-item">
         <i class="fa-solid fa-clipboard-list"></i> Request Management
     </a>
-    <a href="Assistant_Management.php" class="sidebar-item">
+    <a href="Assistant_Management.php" class="sidebar-item active">
         <i class="fa-solid fa-users"></i> Assistant Management
     </a>
     <a href="view-requests.html" class="sidebar-item">
         <i class="fa-solid fa-clock-rotate-left"></i> View Requests
     </a>
-    <a href="Weekly_Performance.php" class="sidebar-item active">
+    <a href="Weekly_Performance.php" class="sidebar-item">
         <i class="fa-solid fa-file-lines"></i> Weekly Performance Report
     </a>
 </aside>
