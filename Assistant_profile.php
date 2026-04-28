@@ -34,12 +34,12 @@ $reviews_sql = "SELECT r.Stars, r.Comment, r.Date, ar.RequestID, t.UserName
                 WHERE ar.AssistantID = $assistant_id";
 $reviews_result = $conn->query($reviews_sql);
 
-$requests_sql = "SELECT ar.RequestID, a.AirportName, ar.Date, ar.Status, aty.AssistanceName 
+$requests_sql = "SELECT ar.RequestID, a.AirportName, ar.Date, ar.Status, IFNULL(aty.AssistanceName, 'N/A') as AssistanceName 
                  FROM ASSISTANCE_REQUEST ar 
-                 JOIN GATE g ON ar.GateID = g.GateID 
-                 JOIN AIRPORT a ON g.AirportID = a.AirportID 
-                 JOIN REQUEST_TYPE rt ON ar.RequestID = rt.RequestID 
-                 JOIN ASSISTANCE_TYPE aty ON rt.AssistanceTypeID = aty.AssistanceTypeID
+                 LEFT JOIN GATE g ON ar.GateID = g.GateID 
+                 LEFT JOIN AIRPORT a ON g.AirportID = a.AirportID 
+                 LEFT JOIN REQUEST_TYPE rt ON ar.RequestID = rt.RequestID 
+                 LEFT JOIN ASSISTANCE_TYPE aty ON rt.AssistanceTypeID = aty.AssistanceTypeID
                  WHERE ar.AssistantID = $assistant_id 
                  ORDER BY ar.Date DESC";
 $requests_result = $conn->query($requests_sql);
