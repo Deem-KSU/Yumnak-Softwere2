@@ -1,5 +1,15 @@
 <?php
 session_start();
+$timeout = 900;
+
+if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $timeout) {
+    session_unset();
+    session_destroy();
+    header("Location: LogIn.html?msg=timeout");
+    exit();
+}
+
+$_SESSION['last_activity'] = time();
 require 'db_connection.php';
 
 if (!isset($_SESSION['user_id'])) {
@@ -55,7 +65,7 @@ SELECT
     ass.Specialization,
     GROUP_CONCAT(at.AssistanceName SEPARATOR ', ') AS AssistanceTypes,
     SUM(at.Price) AS TotalAmount,
-    r.ReviewID
+    MAX(r.ReviewID) AS ReviewID
 FROM ASSISTANCE_REQUEST ar
 LEFT JOIN GATE g ON ar.GateID = g.GateID
 LEFT JOIN AIRPORT a ON g.AirportID = a.AirportID
@@ -115,7 +125,7 @@ function statusClass($status) {
 
   <div class="logout">
     <button onclick="window.location.href='logout.php'">
-      <i class="fas fa-sign-out-alt"></i>
+      <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
       Logout
     </button>
   </div>
@@ -130,7 +140,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'reviewed') {
 ?>
 
 <h2 class="page-title">
-  <i class="fa-solid fa-arrow-left back-icon"></i>
+  <i class="fa-solid fa-arrow-left back-icon" aria-hidden="true"></i>
   Request Details
 </h2>
 
@@ -139,7 +149,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'reviewed') {
 </p>
 
 <div class="status-badge <?= statusClass($request['Status']) ?>">
-  <i class="fa-solid fa-circle-check"></i>
+  <i class="fa-solid fa-circle-check" aria-hidden="true" aria-label="Status"></i>
   <?= htmlspecialchars($request['Status']) ?>
 </div>
 
@@ -175,7 +185,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'reviewed') {
     <div>
       <span>Payment Status</span>
       <p id="paid">
-        <i class="fa-solid fa-check"></i>
+        <i class="fa-solid fa-check" aria-hidden="true" aria-label="Payment Status"></i>
         <?= $request['IsPaid'] ? 'Paid' : 'Not Paid' ?>
       </p>
     </div>
@@ -183,7 +193,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'reviewed') {
     <div>
       <span>Assistance Type</span>
       <p>
-        <i class="fa-solid fa-wheelchair chairicon"></i>
+        <i class="fa-solid fa-wheelchair chairicon" aria-hidden="true"></i>
         <?= htmlspecialchars($request['AssistanceTypes'] ?? 'Not specified') ?>
       </p>
     </div>
@@ -205,7 +215,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'reviewed') {
 
   <?php if ($request['AssistantName']): ?>
     <div class="assistant-info">
-      <img src="https://ui-avatars.com/api/?name=<?= urlencode($request['AssistantName']) ?>&background=random">
+      <img src="https://ui-avatars.com/api/?name=<?= urlencode($request['AssistantName']) ?>&background=random" alt="Assistant Avatar" >
 
       <div>
         <p class="assistant-name"><?= htmlspecialchars($request['AssistantName']) ?></p>
@@ -220,13 +230,13 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'reviewed') {
 <div class="details-actions">
   <?php if ($request['Status'] === 'Completed' && !$request['ReviewID']): ?>
     <button type="button" class="btn rate">
-      <i class="fa-solid fa-star"></i>
+      <i class="fa-solid fa-star" aria-hidden="true" ></i>
       Rate & Review
     </button>
   <?php endif; ?>
 
   <button type="button" class="btn back">
-    <i class="fa-solid fa-arrow-left"></i>
+    <i class="fa-solid fa-arrow-left" aria-hidden="true" ></i>
     Back to My Requests
   </button>
 </div>
@@ -244,16 +254,17 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'reviewed') {
     <h3>Rate Your Experience</h3>
 
     <div class="stars">
-      <i class="fa-regular fa-star"></i>
-      <i class="fa-regular fa-star"></i>
-      <i class="fa-regular fa-star"></i>
-      <i class="fa-regular fa-star"></i>
-      <i class="fa-regular fa-star"></i>
+      <i class="fa-regular fa-star" aria-hidden="true" ></i>
+      <i class="fa-regular fa-star" aria-hidden="true"></i>
+      <i class="fa-regular fa-star" aria-hidden="true"></i>
+      <i class="fa-regular fa-star" aria-hidden="true"></i>
+      <i class="fa-regular fa-star" aria-hidden="true" ></i>
     </div>
 
     <form method="POST">
       <input type="hidden" name="stars" id="starsInput">
-      <textarea name="comment" placeholder="Write your review..."></textarea>
+      <label>Review</label>
+<textarea name="comment" placeholder="Write your review..."></textarea>
 
       <div class="rating-actions">
         <button type="submit" class="btn submit-rating">Submit</button>
