@@ -74,25 +74,36 @@ $requests_result = $conn->query($requests_sql);
     </div>
     <div class="logout">
         <button onclick="window.location.href='LogIn.html'">
-            <i class="fas fa-sign-out-alt"></i> Logout
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
         </button>
     </div>
 </header>
 <div class="container">
-    <aside class="sidebar">
-        <a href="Admin-Dashboard.html" class="sidebar-item"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
-        <a href="request-management.html" class="sidebar-item"><i class="fa-solid fa-clipboard-list"></i> Request Management</a>
-        <a href="Assistant_Management.php" class="sidebar-item"><i class="fa-solid fa-users"></i> Assistant Management</a>
-        <a href="view-requests.html" class="sidebar-item"><i class="fa-solid fa-clock-rotate-left"></i> View Requests</a>
-        <a href="Weekly_Performance.php" class="sidebar-item active"><i class="fa-solid fa-file-lines"></i> Weekly Performance Report</a>
-    </aside>
-    <main class="main-content">
-        <div class="headline">
-            <h1>Assistant Details</h1>
-            <p>View assistant information, performance, and user feedback.</p>
-        </div>
+            <aside class="sidebar">
+    <a href="Admin-Dashboard.html" class="sidebar-item">
+        <i class="fa-solid fa-chart-line"></i> Dashboard
+    </a>
+    <a href="request-management.html" class="sidebar-item">
+        <i class="fa-solid fa-clipboard-list"></i> Request Management
+    </a>
+    <a href="Assistant_Management.php" class="sidebar-item">
+        <i class="fa-solid fa-users"></i> Assistant Management
+    </a>
+    <a href="view-requests.html" class="sidebar-item">
+        <i class="fa-solid fa-clock-rotate-left"></i> View Requests
+    </a>
+    <a href="Weekly_Performance.php" class="sidebar-item active">
+        <i class="fa-solid fa-file-lines"></i> Weekly Performance Report
+    </a>
+</aside>
+<main class="main-content">
+    <div class="headline">
+        <h1>Assistant Details</h1>
+        <p>View assistant information, performance, and user feedback.</p>
+    </div>
 
-        <div class="profile-header-card">
+    <div class="profile-header-card">
             <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($assistant['Name']); ?>&background=8B6B4A&color=fff" alt="Profile" class="main-avatar">
             <div class="profile-info-grid">
                 <div class="name-section">
@@ -116,7 +127,7 @@ $requests_result = $conn->query($requests_sql);
             </div>
         </div>
 
-        <div class="stats-container">
+    <div class="stats-container">
             <div class="stat-box"><div class="stat-icon rating-bg"><i class="fa-solid fa-star"></i></div><h3><?php echo $rating; ?></h3><p>Average Rating</p></div>
             <div class="stat-box"><div class="stat-icon completed-bg"><i class="fa-solid fa-check-double"></i></div><h3><?php echo $stats['CompletedCount']; ?></h3><p>Completed Requests</p></div>
             <div class="stat-box"><div class="stat-icon assigned-bg"><i class="fa-solid fa-clock"></i></div><h3><?php echo $stats['AssignedCount']; ?></h3><p>Active Requests</p></div>
@@ -179,6 +190,36 @@ $requests_result = $conn->query($requests_sql);
         <a href="Weekly_Performance.php" class="btn-back-link"><i class="fa-solid fa-arrow-left"></i> Back to Weekly Performance</a>
     </main>
 </div>
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <h4>Contact Us</h4>
+            <p><i class="fas fa-envelope"></i> support@yumnak.com</p>
+            <div class="social-icons">
+                <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+
+        <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul class="footer-links">
+                <li><a href="#">Sitemap</a></li>
+                <li><a href="Admin-Dashboard.html">Dashboard</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-section about-yumnak">
+            <h4>About Yumnak</h4>
+            <p>Your companion for a world without barriers, making every journey at the airport easier and more inclusive.</p>
+        </div>
+    </div>
+    
+    <div class="footer-bottom">
+        &copy; 2026 Yumnak Platform. All rights reserved.
+    </div>
+</footer>
 <script>
     let currentIndex = 0;
     const track = document.getElementById('reviewsTrack');
@@ -196,4 +237,3 @@ $requests_result = $conn->query($requests_sql);
 </script>
 </body>
 </html>
-
