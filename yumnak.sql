@@ -193,7 +193,4 @@ INSERT INTO REQUEST_TYPE (AssistanceTypeID, RequestID) VALUES
 
 -- Insert 3 Reviews (Usually only done for Completed or Cancelled trips)
 INSERT INTO REVIEW (Stars, Comment, Date, RequestID) VALUES
-(5, 'Fatima was an excellent guide, very respectful and clear. Made my airport experience completely stress-free!', '2026-04-21 14:30:00', 3),
-(5, 'Amazing service! The wheelchair assistance was prompt and the staff was extremely kind. Highly recommend Yumnak.', '2026-04-23 09:15:00', 1),
-(4, 'Very easy to book through the system and my request was accepted very quickly. Looking forward to my flight!', '2026-05-18 11:45:00', 2),
-(5, 'BEST TEAM !! All the love to Yumnak', '2026-04-22 19:45:00', 5);
+(5, 'Fatima was an excellent guide, very respectful and clear. Made my airport experience completely stress-free!', '2026-04-21 14:30:00', 3);
