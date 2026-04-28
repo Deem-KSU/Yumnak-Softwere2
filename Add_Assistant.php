@@ -1,4 +1,10 @@
 <?php
+/*
+session_start();
+if (!isset($_SESSION[''])!== ) {
+    header("Location: LogIn.html");
+    exit(); 
+} */
 require 'db_connection.php';
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_assistant'])) {
     $name = $_POST['fullname'];
@@ -41,16 +47,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_assistant'])) {
     </header>
     <div class="container">
        <aside class="sidebar">
-    <a href="Admin-Dashboard.html" class="sidebar-item">
+    <a href="Admin-Dashboard.php" class="sidebar-item">
         <i class="fa-solid fa-chart-line"></i> Dashboard
     </a>
-    <a href="request-management.html" class="sidebar-item">
+    <a href="request-management.php" class="sidebar-item">
         <i class="fa-solid fa-clipboard-list"></i> Request Management
     </a>
     <a href="Assistant_Management.php" class="sidebar-item active">
         <i class="fa-solid fa-users"></i> Assistant Management
     </a>
-    <a href="view-requests.html" class="sidebar-item">
+    <a href="view-requests.php" class="sidebar-item">
         <i class="fa-solid fa-clock-rotate-left"></i> View Requests
     </a>
     <a href="Weekly_Performance.php" class="sidebar-item">
