@@ -62,9 +62,9 @@ $result = $conn->query("SELECT * FROM ASSISTANT");
 
             <div class="action-bar">
                 <div class="search-container">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" placeholder="Search assistant by name or specialization">
-                </div>
+                 <i class="fa-solid fa-magnifying-glass"></i>
+                 <input type="text" id="searchInput" placeholder="Search assistant by name or specialization">
+            </div>
                 <button class="btn-add" onclick="window.location.href='Add_Assistant.php'"><i class="fa-solid fa-plus"></i> Add Assistant</button>
             </div>
 
@@ -81,10 +81,8 @@ $result = $conn->query("SELECT * FROM ASSISTANT");
                     </thead>
                     <tbody>
                         <?php 
-                        // حلقة تكرار لعرض كل صف من قاعدة البيانات
                         if ($result->num_rows > 0) {
                             while($row = $result->fetch_assoc()) { 
-                                // دالة بسيطة لإنشاء الصورة ديناميكياً من الاسم
                                 $avatarUrl = "https://ui-avatars.com/api/?name=" . urlencode($row['Name']) . "&background=random";
                         ?>
                         <tr>
@@ -151,5 +149,24 @@ $result = $conn->query("SELECT * FROM ASSISTANT");
         &copy; 2026 Yumnak Platform. All rights reserved.
     </div>
 </footer>
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase(); 
+        let rows = document.querySelectorAll('.table-container tbody tr'); 
+
+        rows.forEach(row => {
+            
+            if(row.querySelector('.name')) {
+                let name = row.querySelector('.name').textContent.toLowerCase();
+                let specialization = row.querySelectorAll('td')[2].textContent.toLowerCase();
+                if (name.includes(filter) || specialization.includes(filter)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        });
+    });
+</script>
 </body>
 </html>
