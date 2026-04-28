@@ -20,9 +20,17 @@ if ($assistant_result->num_rows == 0) {
 $assistant = $assistant_result->fetch_assoc();
 
 $stats_sql = "SELECT
-    (SELECT COUNT(*) FROM ASSISTANCE_REQUEST WHERE AssistantID = $assistant_id AND Status = 'Completed') AS CompletedCount,
-    (SELECT COUNT(*) FROM ASSISTANCE_REQUEST WHERE AssistantID = $assistant_id AND Status IN ('Pending', 'Accepted')) AS AssignedCount,
-    (SELECT ROUND(AVG(r.Stars), 1) FROM REVIEW r JOIN ASSISTANCE_REQUEST ar ON r.RequestID = ar.RequestID WHERE ar.AssistantID = $assistant_id) AS AvgRating";
+    (SELECT COUNT(*) FROM ASSISTANCE_REQUEST 
+     WHERE AssistantID = $assistant_id AND Status = 'Completed' 
+     AND YEARWEEK(Date, 1) = YEARWEEK(CURDATE(), 1)) AS CompletedCount,
+    (SELECT COUNT(*) FROM ASSISTANCE_REQUEST 
+     WHERE AssistantID = $assistant_id AND Status IN ('Pending', 'Accepted') 
+     AND YEARWEEK(Date, 1) = YEARWEEK(CURDATE(), 1)) AS AssignedCount,
+    (SELECT ROUND(AVG(r.Stars), 1) FROM REVIEW r 
+     JOIN ASSISTANCE_REQUEST ar ON r.RequestID = ar.RequestID 
+     WHERE ar.AssistantID = $assistant_id 
+     AND YEARWEEK(r.Date, 1) = YEARWEEK(CURDATE(), 1)) AS AvgRating";
+
 $stats_result = $conn->query($stats_sql);
 $stats = $stats_result->fetch_assoc();
 $rating = $stats['AvgRating'] ? $stats['AvgRating'] : "0.0";
@@ -31,7 +39,8 @@ $reviews_sql = "SELECT r.Stars, r.Comment, r.Date, ar.RequestID, t.UserName
                 FROM REVIEW r 
                 JOIN ASSISTANCE_REQUEST ar ON r.RequestID = ar.RequestID 
                 JOIN TRAVELER t ON ar.TravelerID = t.UserID 
-                WHERE ar.AssistantID = $assistant_id";
+                WHERE ar.AssistantID = $assistant_id 
+                AND YEARWEEK(r.Date, 1) = YEARWEEK(CURDATE(), 1)";
 $reviews_result = $conn->query($reviews_sql);
 
 $requests_sql = "SELECT ar.RequestID, a.AirportName, ar.Date, ar.Status, IFNULL(aty.AssistanceName, 'N/A') as AssistanceName 
@@ -41,6 +50,7 @@ $requests_sql = "SELECT ar.RequestID, a.AirportName, ar.Date, ar.Status, IFNULL(
                  LEFT JOIN REQUEST_TYPE rt ON ar.RequestID = rt.RequestID 
                  LEFT JOIN ASSISTANCE_TYPE aty ON rt.AssistanceTypeID = aty.AssistanceTypeID
                  WHERE ar.AssistantID = $assistant_id 
+                 AND YEARWEEK(ar.Date, 1) = YEARWEEK(CURDATE(), 1)
                  ORDER BY ar.Date DESC";
 $requests_result = $conn->query($requests_sql);
 ?>
