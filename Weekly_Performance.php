@@ -8,8 +8,6 @@ $conn = new mysqli($host, $user, $pass, $db);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-
-// جلب بيانات المساعدين مع حساب التقييم وعدد الطلبات المكتملة
 $sql = "SELECT a.AssistantID, a.Name, a.Phone, a.Email, a.Specialization,
         (SELECT COUNT(*) FROM ASSISTANCE_REQUEST ar WHERE ar.AssistantID = a.AssistantID AND ar.Status = 'Completed') AS CompletedCount,
         (SELECT ROUND(AVG(r.Stars), 1) FROM REVIEW r JOIN ASSISTANCE_REQUEST ar ON r.RequestID = ar.RequestID WHERE ar.AssistantID = a.AssistantID) AS AvgRating
@@ -33,25 +31,36 @@ $result = $conn->query($sql);
     </div>
     <div class="logout">
         <button onclick="window.location.href='LogIn.html'">
-            <i class="fas fa-sign-out-alt"></i> Logout
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
         </button>
     </div>
 </header>
 <div class="container">
-    <aside class="sidebar">
-        <a href="Admin-Dashboard.html" class="sidebar-item"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
-        <a href="request-management.html" class="sidebar-item"><i class="fa-solid fa-clipboard-list"></i> Request Management</a>
-        <a href="Assistant_Management.php" class="sidebar-item"><i class="fa-solid fa-users"></i> Assistant Management</a>
-        <a href="view-requests.html" class="sidebar-item"><i class="fa-solid fa-clock-rotate-left"></i> View Requests</a>
-        <a href="Weekly_Performance.php" class="sidebar-item active"><i class="fa-solid fa-file-lines"></i> Weekly Performance Report</a>
-    </aside>
-    <main class="main-content">
-        <div class="headline">
-            <h1>Weekly Performance</h1>
-            <p>Manage assistants, Monitor their availability, and review their performance.</p>
-        </div>
+            <aside class="sidebar">
+    <a href="Admin-Dashboard.html" class="sidebar-item">
+        <i class="fa-solid fa-chart-line"></i> Dashboard
+    </a>
+    <a href="request-management.html" class="sidebar-item">
+        <i class="fa-solid fa-clipboard-list"></i> Request Management
+    </a>
+    <a href="Assistant_Management.php" class="sidebar-item">
+        <i class="fa-solid fa-users"></i> Assistant Management
+    </a>
+    <a href="view-requests.html" class="sidebar-item">
+        <i class="fa-solid fa-clock-rotate-left"></i> View Requests
+    </a>
+    <a href="Weekly_Performance.php" class="sidebar-item active">
+        <i class="fa-solid fa-file-lines"></i> Weekly Performance Report
+    </a>
+</aside>
+<main class="main-content">
+    <div class="headline">
+        <h1>Weekly Performance</h1>
+        <p>Manage assistants, Monitor their availability, and review their performance.</p>
+    </div>
 
-        <div class="performance-grid">
+    <div class="performance-grid">
             <?php 
             if ($result->num_rows > 0) {
                 while($row = $result->fetch_assoc()) { 
@@ -91,5 +100,35 @@ $result = $conn->query($sql);
         </div>
     </main>
 </div>
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <h4>Contact Us</h4>
+            <p><i class="fas fa-envelope"></i> support@yumnak.com</p>
+            <div class="social-icons">
+                <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+
+        <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul class="footer-links">
+                <li><a href="#">Sitemap</a></li>
+                <li><a href="Admin-Dashboard.html">Dashboard</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-section about-yumnak">
+            <h4>About Yumnak</h4>
+            <p>Your companion for a world without barriers, making every journey at the airport easier and more inclusive.</p>
+        </div>
+    </div>
+    
+    <div class="footer-bottom">
+        &copy; 2026 Yumnak Platform. All rights reserved.
+    </div>
+</footer>
 </body>
 </html>
