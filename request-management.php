@@ -35,7 +35,7 @@ $result = mysqli_query($conn, $sql);
             <img src="Image/Yumnak-Logo.png" alt="Yumnak Logo">
         </div>
         <div class="logout">
-        <button onclick="window.location.href='LogIn.html'">
+        <button onclick="window.location.href='LogIn.php'">
             <i class="fas fa-sign-out-alt"></i>
             Logout
         </button>
@@ -44,19 +44,19 @@ $result = mysqli_query($conn, $sql);
 
     <div class="container">
         <aside class="sidebar">
-            <a href="Admin-Dashboard.html" class="sidebar-item">
+            <a href="Admin-Dashboard.php" class="sidebar-item">
                 <i class="fa-solid fa-chart-line"></i> Dashboard
             </a>
-            <a href="request-management.html" class="sidebar-item active">
+            <a href="request-management.php" class="sidebar-item active">
                 <i class="fa-solid fa-clipboard-list"></i> Request Management
             </a>
-            <a href="Assistant_Management.html" class="sidebar-item">
+            <a href="Assistant_Management.php" class="sidebar-item">
                 <i class="fa-solid fa-users"></i> Assistant Management
             </a>
-            <a href="view-requests.html" class="sidebar-item">
+            <a href="view-requests.php" class="sidebar-item">
                 <i class="fa-solid fa-clock-rotate-left"></i> View Requests
             </a>
-            <a href="Weekly_Performance.html" class="sidebar-item">
+            <a href="Weekly_Performance.php" class="sidebar-item">
                 <i class="fa-solid fa-file-lines"></i> Weekly Performance Report
             </a>
         </aside>
@@ -131,7 +131,7 @@ $result = mysqli_query($conn, $sql);
                 <h4>Quick Links</h4>
                 <ul class="footer-links">
                     <li><a href="#">Sitemap</a></li>
-                    <li><a href="Admin-Dashboard.html">Dashboard</a></li>
+                    <li><a href="Admin-Dashboard.php">Dashboard</a></li>
                 </ul>
             </div>
 
