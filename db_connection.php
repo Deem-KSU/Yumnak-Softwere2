@@ -3,7 +3,7 @@ $servername = "localhost";
 $username = "root";
 $password = "root"; 
 $dbname = "YumnakDB";
-$port = 3306; 
+$port = 8889; 
 
 $conn = mysqli_connect($servername, $username, $password, $dbname,$port);
 
