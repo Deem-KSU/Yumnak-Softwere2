@@ -175,7 +175,7 @@ $requests_result = $conn->query($requests_sql);
                                 <?php for($i=0; $i<$rev['Stars']; $i++) { echo '<i class="fa-solid fa-star"></i>'; } ?> 
                                 <?php echo $rev['Stars']; ?>.0
                             </div>
-                            <p>"<?php echo htmlspecialchars($rev['Comment']); ?>"</p>
+                            <p><?php echo htmlspecialchars($rev['Comment']); ?></p>
                         </div>
                     </div>
                     <?php } ?>
