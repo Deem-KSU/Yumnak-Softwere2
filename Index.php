@@ -97,7 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   </div>
 <?php } ?>
 
-      <form method="POST" class="signup-form">
+      <form method="POST" class="signup-form" id="loginForm">
 
         <div class="form-group">
           <label>Username</label>
@@ -112,7 +112,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <label>Password</label>
           <div class="input-box password-box">
             <i class="fa-solid fa-lock"></i>
-            <input type="password" name="password" placeholder="Enter your password">
+            <input type="password" id="loginPassword" name="password" placeholder="Enter your password">
             <i class="fa-regular fa-eye eye-icon" id="loginTogglePassword"></i>
           </div>
         </div>
