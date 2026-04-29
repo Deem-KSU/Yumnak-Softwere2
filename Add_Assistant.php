@@ -137,7 +137,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_assistant'])) {
             </form>
         </main>
     </div>
-    
+     <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Contact Us</h4>
+        <p><i class="fas fa-envelope"></i> support@yumnak.com</p>
+        <div class="social-icons">
+          <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="#"><i class="fab fa-linkedin"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="#">Sitemap</a></li>
+          <li><a href="Admin-Dashboard.php">Dashboard</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section about-yumnak">
+        <h4>About Yumnak</h4>
+        <p>Your companion for a world without barriers, making every journey at the airport easier and more inclusive.
+        </p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      &copy; 2026 Yumnak Platform. All rights reserved.
+    </div>
+  </footer>
     <script>
         const imageInput = document.getElementById('imageInput');
         const photoPreview = document.getElementById('photoPreview');
