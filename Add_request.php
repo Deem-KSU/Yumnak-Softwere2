@@ -1,9 +1,28 @@
 <?php
 session_start();
+
+$timeout = 900;
+
+if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $timeout) {
+    session_unset();
+    session_destroy();
+    header("Location: LogIn.php?msg=timeout");
+    exit();
+}
+
+$_SESSION['last_activity'] = time();
+
 require 'db_connection.php';
 
+if (!isset($_SESSION['admin_id'])) {
+    header("Location: LogIn.php");
+    exit();
+}
+
+$adminID = $_SESSION['admin_id'];
+
 if (!isset($_SESSION['user_id'])) {
-    header("Location: LogIn.html");
+    header("Location: LogIn.php");
     exit();
 }
 
@@ -51,7 +70,7 @@ $typeResult = mysqli_query($conn, $typeSql);
     </nav>
 
     <div class="logout">
-        <button onclick="window.location.href='LogIn.html'">
+         <button onclick="window.location.href='logout.php'">
             <i class="fas fa-sign-out-alt"></i>
             Logout
         </button>

@@ -1,6 +1,25 @@
 <?php
 session_start();
+
+$timeout = 900;
+
+if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $timeout) {
+    session_unset();
+    session_destroy();
+    header("Location: LogIn.php?msg=timeout");
+    exit();
+}
+
+$_SESSION['last_activity'] = time();
+
 require 'db_connection.php';
+
+if (!isset($_SESSION['admin_id'])) {
+    header("Location: LogIn.php");
+    exit();
+}
+
+$adminID = $_SESSION['admin_id'];
 
 // Query to fetch ONLY Pending requests
 // We use JOIN to connect the request to the Gate, and then the Gate to the Airport
@@ -35,7 +54,7 @@ $result = mysqli_query($conn, $sql);
             <img src="Image/Yumnak-Logo.png" alt="Yumnak Logo">
         </div>
         <div class="logout">
-        <button onclick="window.location.href='LogIn.php'">
+       <button onclick="window.location.href='logout.php'">
             <i class="fas fa-sign-out-alt"></i>
             Logout
         </button>
