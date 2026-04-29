@@ -3,7 +3,7 @@ session_start();
 require 'db_connection.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: LogIn.html");
+    header("Location: LogIn.php");
     exit();
 }
 
@@ -51,7 +51,7 @@ $typeResult = mysqli_query($conn, $typeSql);
     </nav>
 
     <div class="logout">
-        <button onclick="window.location.href='LogIn.html'">
+        <button onclick="window.location.href='LogIn.php'">
             <i class="fas fa-sign-out-alt"></i>
             Logout
         </button>
