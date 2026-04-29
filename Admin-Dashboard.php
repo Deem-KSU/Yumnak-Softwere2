@@ -1,7 +1,26 @@
 <?php
 // Start the session and connect to the database 
 session_start();
+
+$timeout = 900;
+
+if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $timeout) {
+    session_unset();
+    session_destroy();
+    header("Location: LogIn.php?msg=timeout");
+    exit();
+}
+
+$_SESSION['last_activity'] = time();
+
 require 'db_connection.php';
+
+if (!isset($_SESSION['admin_id'])) {
+    header("Location: LogIn.php");
+    exit();
+}
+
+$adminID = $_SESSION['admin_id'];
 
 // Admin Details (Since we have 1 admin, we use AdminID = 1)
 $adminQuery = "SELECT UserName, Phone, Email FROM ADMIN WHERE AdminID = 1";
