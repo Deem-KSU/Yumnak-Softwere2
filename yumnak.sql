@@ -152,11 +152,11 @@ INSERT INTO ASSISTANCE_TYPE (AssistanceName, Description, Price) VALUES
 
 -- Insert 3 Assistants (Managed by Admin 1)
 INSERT INTO ASSISTANT (Name, Phone, Email, Specialization, AdminID) VALUES
-('Abdullah Yasser', '+966544111222', 'abdullah@yumnak.com', 'Wheelchair Assistance', 1),
-('Fatima Saad', '+966544333444', 'fatima@yumnak.com', 'Visual Impairment Assistance', 1),
-('Yazeed Ali', '+966544555666', 'yazeed@yumnak.com', 'Hearing Impairment Assistance', 1),
-('Maha Sultan', '+966544777888', 'maha@yumnak.com', 'Mobility Assistance', 1),
-('Saud Ibrahim', '+966544999000', 'saud@yumnak.com', 'Cognitive Assistance', 1);
+('Abdullah Yasser', '0544111222', 'abdullah@yumnak.com', 'Wheelchair Assistance', 1),
+('Fatima Saad', '0544333444', 'fatima@yumnak.com', 'Visual Impairment Assistance', 1),
+('Yazeed Ali', '0544555666', 'yazeed@yumnak.com', 'Hearing Impairment Assistance', 1),
+('Maha Sultan', '0544777888', 'maha@yumnak.com', 'Mobility Assistance', 1),
+('Saud Ibrahim', '0544999000', 'saud@yumnak.com', 'Cognitive Assistance', 1);
 
 -- Insert Gates for all 29 Airports
 INSERT INTO GATE (GateID, AirportID) VALUES
