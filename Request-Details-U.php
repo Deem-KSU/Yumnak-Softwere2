@@ -292,6 +292,9 @@ let selectedRating = 0;
 document.querySelector(".btn.back").onclick = () => {
   window.location.href = "my-requests.php";
 };
+document.querySelector(".back-icon").onclick = () => {
+  window.location.href = "my-requests.php";
+};
 
 if (document.querySelector(".btn.rate")) {
   document.querySelector(".btn.rate").onclick = () => {
