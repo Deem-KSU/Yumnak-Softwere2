@@ -181,7 +181,7 @@ INSERT INTO ASSISTANCE_REQUEST (PreferredTime, ExtraNote, Status, IsPaid, Travel
 ('2026-05-22 10:30:00', 'Passenger arriving early.', 'Accepted', TRUE, 2, 1, 1, 'JE05'),
 ('2026-04-15 08:00:00', 'Needs help with 2 heavy bags.', 'Completed', TRUE, 3, 1, 3, 'DM08'),
 ('2026-06-01 18:45:00', 'Flight was changed.', 'Cancelled', TRUE, 1, 1, NULL, 'RU12'),
-('2026-05-25 23:00:00', 'Last minute request.', 'Rejected', FALSE, 2, 1, NULL, 'JE05');
+('2026-05-25 23:00:00', 'Last minute request.', 'Rejected', TRUE, 2, 1, NULL, 'JE05');
 
 -- Insert 5 Request_Types (Linking the requests to their required assistance)
 INSERT INTO REQUEST_TYPE (AssistanceTypeID, RequestID) VALUES
