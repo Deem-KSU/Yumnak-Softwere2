@@ -102,7 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <div class="input-box">
             <i class="fa-regular fa-user"></i>
             <input type="text" name="username" placeholder="Enter your username"
-            value="<?php echo isset($username) ? htmlspecialchars($username) : ''; ?>">
+            >
           </div>
         </div>
 

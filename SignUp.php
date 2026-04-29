@@ -13,8 +13,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
     $confirmPassword = $_POST['confirmPassword'];
 
-    if (empty($username) || empty($email) || empty($phone) || empty($dob) || empty($password) || empty($confirmPassword)) {
-        $error = "All fields are required.";
+    if (
+        empty($username) || empty($email) || empty($phone) ||
+        empty($dob) || empty($password) || empty($confirmPassword)
+    ) {
+        $error = "Please fill in all required fields";
 
     } elseif (!preg_match("/^[A-Za-z0-9_ ]{3,100}$/", $username)) {
         $error = "Username must be at least 3 characters.";
@@ -38,50 +41,64 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $error = "You must be at least 18 years old.";
 
         } elseif (!preg_match("/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/", $password)) {
-            $error = "Password must be at least 8 characters and include uppercase, number, and special character.";
+            $error = "Password must be at least 8 characters long and include an uppercase letter, a number, and a special character";
 
         } elseif ($password !== $confirmPassword) {
             $error = "Passwords do not match.";
 
         } else {
-$stmt = $conn->prepare("SELECT UserID FROM TRAVELER WHERE UserName = ? OR Email = ?");
-$stmt->bind_param("ss", $username, $email);
-$stmt->execute();
-$result = $stmt->get_result();
 
-if ($result->num_rows > 0) {
-    $error = "Registration failed. Please try a different email or username.";
-} else {
-    $stmtPhone = $conn->prepare("SELECT UserID FROM TRAVELER WHERE Phone = ?");
-    $stmtPhone->bind_param("s", $phone);
-    $stmtPhone->execute();
-    $phoneResult = $stmtPhone->get_result();
+            $stmt = $conn->prepare("SELECT UserID FROM TRAVELER WHERE UserName = ? OR Email = ?");
+            $stmt->bind_param("ss", $username, $email);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-    if ($phoneResult->num_rows > 0) {
-        $error = "This phone number is already linked to another account.";
-    } else {
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            if ($result->num_rows > 0) {
+                $error = "Registration failed. Please try a different email or username.";
 
-        $stmtInsert = $conn->prepare("INSERT INTO TRAVELER (UserName, Email, Phone, Password, DOB) VALUES (?, ?, ?, ?, ?)");
-        $stmtInsert->bind_param("sssss", $username, $email, $phone, $hashedPassword, $dob);
+            } else {
 
-        if ($stmtInsert->execute()) {
-            header("Location: LogIn.php?success=1");
-            exit();
-        } else {
-            $error = "Something went wrong.";
-        }
-    }
-}
-           
+                $stmtPhone = $conn->prepare("SELECT UserID FROM TRAVELER WHERE Phone = ?");
+                $stmtPhone->bind_param("s", $phone);
+                $stmtPhone->execute();
+                $phoneResult = $stmtPhone->get_result();
+
+                if ($phoneResult->num_rows > 0) {
+                    $error = "This phone number is already linked to another account.";
+
+                } else {
+
+                    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+                    $stmtInsert = $conn->prepare(
+                        "INSERT INTO TRAVELER (UserName, Email, Phone, Password, DOB)
+                         VALUES (?, ?, ?, ?, ?)"
+                    );
+
+                    $stmtInsert->bind_param(
+                        "sssss",
+                        $username,
+                        $email,
+                        $phone,
+                        $hashedPassword,
+                        $dob
+                    );
+
+                    if ($stmtInsert->execute()) {
+                        header("Location: LogIn.php?success=1");
+                        exit();
+                    } else {
+                        $error = "Something went wrong. Please try again.";
+                    }
+                }
             }
         }
     }
-
+}
 ?>
 
 <!DOCTYPE html>
-<html lang="ar" dir="ltr">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -91,6 +108,7 @@ if ($result->num_rows > 0) {
 </head>
 
 <body>
+
 <header>
     <div class="logo">
         <img src="Image/Yumnak-Logo.png" alt="Yumnak Logo">
@@ -112,9 +130,11 @@ if ($result->num_rows > 0) {
       <h2>Create Account</h2>
       <p class="subtitle">Enter your details to get started</p>
 
-      <?php if (!empty($error)) { ?>
-        <div class="form-message error-message"><?php echo $error; ?></div>
-      <?php } ?>
+<?php if (!empty($error)) { ?>
+  <div class="server-error">
+    <?php echo htmlspecialchars($error); ?>
+  </div>
+<?php } ?>
 
       <form class="signup-form" id="signupForm" method="POST" action="SignUp.php" novalidate>
 
@@ -122,8 +142,12 @@ if ($result->num_rows > 0) {
           <label for="username">Username</label>
           <div class="input-box">
             <i class="fa-regular fa-user"></i>
-            <input type="text" id="username" name="username" placeholder="Enter your username"
-            value="<?php echo isset($username) ? htmlspecialchars($username) : ''; ?>">
+            <input 
+              type="text" 
+              id="username" 
+              name="username" 
+              placeholder="Enter your username"
+              >
           </div>
           <small class="field-error" id="usernameError"></small>
         </div>
@@ -132,8 +156,12 @@ if ($result->num_rows > 0) {
           <label for="email">Email Address</label>
           <div class="input-box">
             <i class="fa-regular fa-envelope"></i>
-            <input type="email" id="email" name="email" placeholder="Enter your email"
-            value="<?php echo isset($email) ? htmlspecialchars($email) : ''; ?>">
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              placeholder="Enter your email"
+              value="<?php echo isset($email) ? htmlspecialchars($email) : ''; ?>">
           </div>
           <small class="field-error" id="emailError"></small>
         </div>
@@ -142,8 +170,12 @@ if ($result->num_rows > 0) {
           <label for="phone">Phone Number</label>
           <div class="input-box">
             <i class="fa-solid fa-phone"></i>
-            <input type="text" id="phone" name="phone" placeholder="Enter your phone number"
-            value="<?php echo isset($phone) ? htmlspecialchars($phone) : ''; ?>">
+            <input 
+              type="text" 
+              id="phone" 
+              name="phone" 
+              placeholder="Enter your phone number"
+              value="<?php echo isset($phone) ? htmlspecialchars($phone) : ''; ?>">
           </div>
           <small class="field-error" id="phoneError"></small>
         </div>
@@ -151,8 +183,11 @@ if ($result->num_rows > 0) {
         <div class="form-group">
           <label for="dob">Date of Birth</label>
           <div class="input-box">
-            <input type="date" id="dob" name="dob"
-            value="<?php echo isset($dob) ? htmlspecialchars($dob) : ''; ?>">
+            <input 
+              type="date" 
+              id="dob" 
+              name="dob"
+              value="<?php echo isset($dob) ? htmlspecialchars($dob) : ''; ?>">
           </div>
           <small class="field-error" id="dobError"></small>
         </div>
@@ -161,7 +196,11 @@ if ($result->num_rows > 0) {
           <label for="password">Password</label>
           <div class="input-box password-box">
             <i class="fa-solid fa-lock"></i>
-            <input type="password" id="password" name="password" placeholder="Enter your password">
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              placeholder="Enter your password">
             <i class="fa-regular fa-eye eye-icon" id="togglePassword"></i>
           </div>
           <small class="field-error" id="passwordError"></small>
@@ -171,13 +210,17 @@ if ($result->num_rows > 0) {
           <label for="confirmPassword">Confirm Password</label>
           <div class="input-box password-box">
             <i class="fa-solid fa-lock"></i>
-            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password">
+            <input 
+              type="password" 
+              id="confirmPassword" 
+              name="confirmPassword" 
+              placeholder="Confirm your password">
             <i class="fa-regular fa-eye eye-icon" id="toggleConfirmPassword"></i>
           </div>
           <small class="field-error" id="confirmPasswordError"></small>
         </div>
 
-        <button type="submit" class="create-btn">Create Account</button>
+        <button type="submit" class="create-btn">Sign Up</button>
 
         <p class="signin-text">
           Already have an account? <a href="LogIn.php">Sign In</a>
@@ -215,5 +258,6 @@ if ($result->num_rows > 0) {
 </footer>
 
 <script src="scriptD.js"></script>
+
 </body>
 </html>

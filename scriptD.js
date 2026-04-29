@@ -2,11 +2,13 @@ const signupForm = document.getElementById("signupForm");
 const loginForm = document.getElementById("loginForm");
 
 function showError(elementId, message) {
-  document.getElementById(elementId).textContent = message;
+  const element = document.getElementById(elementId);
+  if (element) element.textContent = message;
 }
 
 function clearError(elementId) {
-  document.getElementById(elementId).textContent = "";
+  const element = document.getElementById(elementId);
+  if (element) element.textContent = "";
 }
 
 function clearMultipleErrors(errorIds) {
@@ -20,7 +22,10 @@ function getAge(dateString) {
   let age = today.getFullYear() - birthDate.getFullYear();
   const monthDiff = today.getMonth() - birthDate.getMonth();
 
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 && today.getDate() < birthDate.getDate())
+  ) {
     age--;
   }
 
@@ -35,6 +40,8 @@ function isValidPassword(password) {
   return /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(password);
 }
 
+/* ================= SIGN UP ================= */
+
 if (signupForm) {
   const username = document.getElementById("username");
   const email = document.getElementById("email");
@@ -43,11 +50,7 @@ if (signupForm) {
   const password = document.getElementById("password");
   const confirmPassword = document.getElementById("confirmPassword");
 
-  const formError = document.getElementById("formError");
-  const formSuccess = document.getElementById("formSuccess");
-
   signupForm.addEventListener("submit", function (e) {
-
     clearMultipleErrors([
       "usernameError",
       "emailError",
@@ -56,16 +59,6 @@ if (signupForm) {
       "passwordError",
       "confirmPasswordError"
     ]);
-
-    if (formError) {
-      formError.textContent = "";
-      formError.style.display = "none";
-    }
-
-    if (formSuccess) {
-      formSuccess.textContent = "";
-      formSuccess.style.display = "none";
-    }
 
     let isValid = true;
 
@@ -122,15 +115,7 @@ if (signupForm) {
 
     if (!isValid) {
       e.preventDefault();
-
-      if (formError) {
-        formError.textContent = "Please fix the errors below";
-        formError.style.display = "block";
-      }
     }
-
-    // إذا كل شيء صحيح، ما نسوي preventDefault
-    // عشان الفورم يروح لـ PHP ويحفظ بالداتابيس
   });
 
   const togglePassword = document.getElementById("togglePassword");
@@ -146,12 +131,15 @@ if (signupForm) {
 
   if (toggleConfirmPassword) {
     toggleConfirmPassword.addEventListener("click", function () {
-      confirmPassword.type = confirmPassword.type === "password" ? "text" : "password";
+      confirmPassword.type =
+        confirmPassword.type === "password" ? "text" : "password";
       this.classList.toggle("fa-eye");
       this.classList.toggle("fa-eye-slash");
     });
   }
 }
+
+/* ================= LOGIN ================= */
 
 if (loginForm) {
   const loginUsername = document.getElementById("loginUsername");
@@ -161,8 +149,11 @@ if (loginForm) {
 
   function validateLogin() {
     clearMultipleErrors(["loginUsernameError", "loginPasswordError"]);
-    loginError.textContent = "";
-    loginError.style.display = "none";
+
+    if (loginError) {
+      loginError.textContent = "";
+      loginError.style.display = "none";
+    }
 
     let isValid = true;
 
@@ -176,7 +167,7 @@ if (loginForm) {
       isValid = false;
     }
 
-    if (!isValid) {
+    if (!isValid && loginError) {
       loginError.textContent = "Please fill in all required fields";
       loginError.style.display = "block";
     }
@@ -185,17 +176,15 @@ if (loginForm) {
   }
 
   loginForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    if (validateLogin()) {
-      window.location.href = "User-Dashboard.php";
+    if (!validateLogin()) {
+      e.preventDefault();
     }
   });
 
   if (adminBtn) {
-    adminBtn.addEventListener("click", function () {
-      if (validateLogin()) {
-        window.location.href = "Admin-Dashboard.php";
+    adminBtn.addEventListener("click", function (e) {
+      if (!validateLogin()) {
+        e.preventDefault();
       }
     });
   }
@@ -204,14 +193,16 @@ if (loginForm) {
 
   if (loginTogglePassword) {
     loginTogglePassword.addEventListener("click", function () {
-      loginPassword.type = loginPassword.type === "password" ? "text" : "password";
+      loginPassword.type =
+        loginPassword.type === "password" ? "text" : "password";
       this.classList.toggle("fa-eye");
       this.classList.toggle("fa-eye-slash");
     });
   }
 }
 
+/* ================= NAVIGATION ================= */
+
 function goToAddRequest() {
   window.location.href = "Airport_Selection.php";
 }
-

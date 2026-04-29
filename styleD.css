@@ -889,3 +889,14 @@ nav a.active {
   border-radius: 8px;
   cursor: pointer;
 }
+
+.server-error {
+  background-color: #FFF8F3;
+  color: #7A3E2E;
+  border: 1px solid #E2C8B8;
+  padding: 12px 14px;
+  margin: 16px 0;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+}
