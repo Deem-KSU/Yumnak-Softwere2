@@ -1,5 +1,5 @@
 <?php
-$servername = "localhost";
+$servername = "localhost:8889";
 $username = "root";
 $password = "root"; 
 $dbname = "YumnakDB";
