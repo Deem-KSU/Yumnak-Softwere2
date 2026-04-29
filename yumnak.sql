@@ -107,7 +107,7 @@ INSERT INTO TRAVELER (UserName, Email, Phone, Password, DOB) VALUES
 ('Majed Alharbi', 'majed@gmail.com', '+966505556666', '$2a$12$WU65E2Rh4Bb7KbrQAyYsBexJcuaYyC8JkRqFYxu2rGp2opnr1jVMu', '1975-12-01'),
 ('Reem Alqahtani', 'reem@gmail.com', '+966507778888', '$2a$12$C0ruSsEHe.TzAzK9.adhA.AhWoiIPoi2eOhj1VdVAD1zLPCaFrEjy', '2000-03-22');
 
--- Insert 3 Admins
+-- Insert an Admins
 INSERT INTO ADMIN (UserName, Email, Phone, Password, DOB) VALUES
 ('Khalid Abdullah', 'khalid.admin@yumnak.com', '+966555123456', '$2a$12$9xBAvl0GP0Ni9hBxcwwy7OO32gQ56Y1opaTP32pGZ8M0BGaBqcTOS', '1988-02-20');
 
