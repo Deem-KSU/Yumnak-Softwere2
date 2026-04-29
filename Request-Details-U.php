@@ -1,5 +1,15 @@
 <?php
 session_start();
+$timeout = 900;
+
+if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $timeout) {
+    session_unset();
+    session_destroy();
+    header("Location: LogIn.html?msg=timeout");
+    exit();
+}
+
+$_SESSION['last_activity'] = time();
 require 'db_connection.php';
 
 if (!isset($_SESSION['user_id'])) {
@@ -16,17 +26,26 @@ $travelerID = $_SESSION['user_id'];
 $requestID = $_GET['id'];
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $stars = $_POST['stars'];
-    $comment = $_POST['comment'];
+    $stars = $_POST['stars'] ?? 0;
+    $comment = $_POST['comment'] ?? '';
 
-    $insertReview = "
-        INSERT INTO REVIEW (Stars, Comment, Date, RequestID)
-        VALUES (?, ?, CURRENT_TIMESTAMP, ?)
-    ";
+    // check if review already exists
+    $check = "SELECT ReviewID FROM REVIEW WHERE RequestID = ?";
+    $stmtCheck = mysqli_prepare($conn, $check);
+    mysqli_stmt_bind_param($stmtCheck, "i", $requestID);
+    mysqli_stmt_execute($stmtCheck);
+    $resCheck = mysqli_stmt_get_result($stmtCheck);
 
-    $stmtReview = mysqli_prepare($conn, $insertReview);
-    mysqli_stmt_bind_param($stmtReview, "isi", $stars, $comment, $requestID);
-    mysqli_stmt_execute($stmtReview);
+    if (mysqli_num_rows($resCheck) == 0) {
+        $insertReview = "
+            INSERT INTO REVIEW (Stars, Comment, Date, RequestID)
+            VALUES (?, ?, CURRENT_TIMESTAMP, ?)
+        ";
+
+        $stmtReview = mysqli_prepare($conn, $insertReview);
+        mysqli_stmt_bind_param($stmtReview, "isi", $stars, $comment, $requestID);
+        mysqli_stmt_execute($stmtReview);
+    }
 
     header("Location: Request-Details-U.php?id=$requestID&msg=reviewed");
     exit();
@@ -46,7 +65,7 @@ SELECT
     ass.Specialization,
     GROUP_CONCAT(at.AssistanceName SEPARATOR ', ') AS AssistanceTypes,
     SUM(at.Price) AS TotalAmount,
-    r.ReviewID
+    MAX(r.ReviewID) AS ReviewID
 FROM ASSISTANCE_REQUEST ar
 LEFT JOIN GATE g ON ar.GateID = g.GateID
 LEFT JOIN AIRPORT a ON g.AirportID = a.AirportID
@@ -94,266 +113,195 @@ function statusClass($status) {
 
 <body>
 
-  <header>
-    <div class="logo">
-      <img src="Image/Yumnak-Logo.png" alt="Yumnak Logo">
+<header>
+  <div class="logo">
+    <img src="Image/Yumnak-Logo.png" alt="Yumnak Logo">
+  </div>
+
+  <nav>
+    <a href="user-dashboard.php">Home</a>
+    <a href="my-requests.php">My Requests</a>
+  </nav>
+
+  <div class="logout">
+    <button onclick="window.location.href='logout.php'">
+      <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+      Logout
+    </button>
+  </div>
+</header>
+
+<main class="details-container">
+
+<?php
+if (isset($_GET['msg']) && $_GET['msg'] == 'reviewed') {
+    echo "<script>alert('Thank you for your feedback!');</script>";
+}
+?>
+
+<h2 class="page-title">
+  <i class="fa-solid fa-arrow-left back-icon" aria-hidden="true"></i>
+  Request Details
+</h2>
+
+<p class="page-subtitle">
+  View the full details and current status of your assistance request.
+</p>
+
+<div class="status-badge <?= statusClass($request['Status']) ?>">
+  <i class="fa-solid fa-circle-check" aria-hidden="true" aria-label="Status"></i>
+  <?= htmlspecialchars($request['Status']) ?>
+</div>
+
+<div class="details-box">
+  <h2>Request Information</h2>
+
+  <div class="details-grid">
+    <div>
+      <span>Request ID</span>
+      <p>#YMK-<?= htmlspecialchars($request['RequestID']) ?></p>
     </div>
 
-    <nav>
-      <a href="user-dashboard.php">Home</a>
-      <a href="my-requests.php">My Requests</a>
-    </nav>
-
-    <div class="logout">
-        <button onclick="window.location.href='logout.php'">
-            <i class="fas fa-sign-out-alt"></i>
-            Logout
-        </button>
-    </div>
-  </header>
-
-  <main class="details-container">
-    <?php
-    if (isset($_GET['msg']) && $_GET['msg'] == 'reviewed') {
-        echo "<script>alert('Thank you for your feedback!');</script>";
-    }
-    ?>
-
-    <h2 class="page-title">
-      <i class="fa-solid fa-arrow-left back-icon"></i>
-      Request Details
-    </h2>
-
-    <p class="page-subtitle">
-      View the full details and current status of your assistance request.
-    </p>
-
-    <div class="status-badge <?= statusClass($request['Status']) ?>">
-      <i class="fa-solid fa-circle-check"></i>
-      <?= htmlspecialchars($request['Status']) ?>
+    <div>
+      <span>Preferred Date</span>
+      <p><?= date("F d, Y", strtotime($request['PreferredTime'])) ?></p>
     </div>
 
-    <div class="details-box">
-      <h2>Request Information</h2>
-
-      <div class="details-grid">
-        <div>
-          <span>Request ID</span>
-          <p>#YMK-<?= htmlspecialchars($request['RequestID']) ?></p>
-        </div>
-
-        <div>
-          <span>Preferred Date</span>
-          <p><?= date("F d, Y", strtotime($request['PreferredTime'])) ?></p>
-        </div>
-
-        <div>
-          <span>Airport</span>
-          <p><?= htmlspecialchars($request['AirportName']) ?></p>
-        </div>
-
-        <div>
-          <span>Preferred Time</span>
-          <p><?= date("H:i", strtotime($request['PreferredTime'])) ?></p>
-        </div>
-
-        <div>
-          <span>Entrance Gate</span>
-          <p>Gate <?= htmlspecialchars($request['GateID']) ?></p>
-        </div>
-
-        <div>
-          <span>Payment Status</span>
-          <p id="paid">
-            <i class="fa-solid fa-check"></i>
-            <?= $request['IsPaid'] ? 'Paid' : 'Not Paid' ?>
-          </p>
-        </div>
-
-        <div>
-          <span>Assistance Type</span>
-          <p>
-            <i class="fa-solid fa-wheelchair chairicon"></i>
-            <?= htmlspecialchars($request['AssistanceTypes']) ?>
-          </p>
-        </div>
-
-        <div>
-          <span>Total Amount</span>
-          <p>$<?= number_format($request['TotalAmount'], 2) ?></p>
-        </div>
-      </div>
-
-      <div class="notes">
-        <span class="notes-title">Extra Notes</span>
-        <p>
-          <?= htmlspecialchars($request['ExtraNote'] ?: 'No extra notes provided.') ?>
-        </p>
-      </div>
+    <div>
+      <span>Airport</span>
+      <p><?= htmlspecialchars($request['AirportName']) ?></p>
     </div>
 
-    <div class="details-box">
-      <h2>Assigned Assistant</h2>
-
-      <?php if ($request['AssistantName']): ?>
-        <div class="assistant-info">
-          <img src="https://ui-avatars.com/api/?name=<?= urlencode($request['AssistantName']) ?>&background=random" alt="Assigned Assistant">
-
-          <div>
-            <p class="assistant-name"><?= htmlspecialchars($request['AssistantName']) ?></p>
-            <span><?= htmlspecialchars($request['Specialization']) ?></span>
-          </div>
-        </div>
-      <?php else: ?>
-        <p>No assistant assigned yet.</p>
-      <?php endif; ?>
+    <div>
+      <span>Preferred Time</span>
+      <p><?= date("H:i", strtotime($request['PreferredTime'])) ?></p>
     </div>
 
-    <div class="details-actions">
-      <?php if ($request['Status'] === 'Completed' && !$request['ReviewID']): ?>
-        <button type="button" class="btn rate">
-          <i class="fa-solid fa-star"></i>
-          Rate & Review
-        </button>
-      <?php endif; ?>
-
-      <button type="button" class="btn back">
-        <i class="fa-solid fa-arrow-left"></i>
-        Back to My Requests
-      </button>
-    </div>
-  </main>
-
-  <footer class="footer">
-    <div class="footer-content">
-      <div class="footer-section">
-        <h4>Contact Us</h4>
-        <p><i class="fas fa-envelope"></i> support@yumnak.com</p>
-        <div class="social-icons">
-          <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
-          <a href="#"><i class="fab fa-linkedin"></i></a>
-          <a href="#"><i class="fab fa-instagram"></i></a>
-        </div>
-      </div>
-
-      <div class="footer-section">
-        <h4>Quick Links</h4>
-        <ul class="footer-links">
-          <li><a href="#">Sitemap</a></li>
-          <li><a href="user-dashboard.php">Dashboard</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-section about-yumnak">
-        <h4>About Yumnak</h4>
-        <p>Your companion for a world without barriers, making every journey at the airport easier and more inclusive.</p>
-      </div>
+    <div>
+      <span>Entrance Gate</span>
+      <p>Gate <?= htmlspecialchars($request['GateID']) ?></p>
     </div>
 
-    <div class="footer-bottom">
-      &copy; 2026 Yumnak Platform. All rights reserved.
+    <div>
+      <span>Payment Status</span>
+      <p id="paid">
+        <i class="fa-solid fa-check" aria-hidden="true" aria-label="Payment Status"></i>
+        <?= $request['IsPaid'] ? 'Paid' : 'Not Paid' ?>
+      </p>
     </div>
-  </footer>
 
-  <div class="rating-modal" id="ratingModal">
-    <div class="rating-box">
-      <h3>Rate Your Experience</h3>
+    <div>
+      <span>Assistance Type</span>
+      <p>
+        <i class="fa-solid fa-wheelchair chairicon" aria-hidden="true"></i>
+        <?= htmlspecialchars($request['AssistanceTypes'] ?? 'Not specified') ?>
+      </p>
+    </div>
 
-      <div class="stars">
-        <i class="fa-regular fa-star" data-value="1"></i>
-        <i class="fa-regular fa-star" data-value="2"></i>
-        <i class="fa-regular fa-star" data-value="3"></i>
-        <i class="fa-regular fa-star" data-value="4"></i>
-        <i class="fa-regular fa-star" data-value="5"></i>
-      </div>
-
-      <form method="POST" id="reviewForm">
-        <input type="hidden" name="stars" id="starsInput">
-
-        <textarea name="comment" id="reviewText" placeholder="Write your review..."></textarea>
-
-        <div class="rating-actions">
-          <button type="submit" class="btn submit-rating">Submit</button>
-          <button type="button" class="btn close-rating">Cancel</button>
-        </div>
-      </form>
+    <div>
+      <span>Total Amount</span>
+      <p>$<?= number_format($request['TotalAmount'] ?? 0, 2) ?></p>
     </div>
   </div>
 
+  <div class="notes">
+    <span class="notes-title">Extra Notes</span>
+    <p><?= htmlspecialchars($request['ExtraNote'] ?: 'No extra notes provided.') ?></p>
+  </div>
+</div>
+
+<div class="details-box">
+  <h2>Assigned Assistant</h2>
+
+  <?php if ($request['AssistantName']): ?>
+    <div class="assistant-info">
+      <img src="https://ui-avatars.com/api/?name=<?= urlencode($request['AssistantName']) ?>&background=random" alt="Assistant Avatar" >
+
+      <div>
+        <p class="assistant-name"><?= htmlspecialchars($request['AssistantName']) ?></p>
+        <span><?= htmlspecialchars($request['Specialization']) ?></span>
+      </div>
+    </div>
+  <?php else: ?>
+    <p>No assistant assigned yet.</p>
+  <?php endif; ?>
+</div>
+
+<div class="details-actions">
+  <?php if ($request['Status'] === 'Completed' && !$request['ReviewID']): ?>
+    <button type="button" class="btn rate">
+      <i class="fa-solid fa-star" aria-hidden="true" ></i>
+      Rate & Review
+    </button>
+  <?php endif; ?>
+
+  <button type="button" class="btn back">
+    <i class="fa-solid fa-arrow-left" aria-hidden="true" ></i>
+    Back to My Requests
+  </button>
+</div>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-bottom">
+    &copy; 2026 Yumnak Platform. All rights reserved.
+  </div>
+</footer>
+
+<div class="rating-modal" id="ratingModal">
+  <div class="rating-box">
+    <h3>Rate Your Experience</h3>
+
+    <div class="stars">
+      <i class="fa-regular fa-star" aria-hidden="true" ></i>
+      <i class="fa-regular fa-star" aria-hidden="true"></i>
+      <i class="fa-regular fa-star" aria-hidden="true"></i>
+      <i class="fa-regular fa-star" aria-hidden="true"></i>
+      <i class="fa-regular fa-star" aria-hidden="true" ></i>
+    </div>
+
+    <form method="POST">
+      <input type="hidden" name="stars" id="starsInput">
+      <label>Review</label>
+<textarea name="comment" placeholder="Write your review..."></textarea>
+
+      <div class="rating-actions">
+        <button type="submit" class="btn submit-rating">Submit</button>
+        <button type="button" class="btn close-rating">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script>
-  const backBtn = document.querySelector(".btn.back");
-  const backIcon = document.querySelector(".back-icon");
-  const rateBtn = document.querySelector(".btn.rate");
+const modal = document.getElementById("ratingModal");
+const stars = document.querySelectorAll(".stars i");
+const starsInput = document.getElementById("starsInput");
 
-  const modal = document.getElementById("ratingModal");
-  const stars = document.querySelectorAll(".stars i");
-  const submitBtn = document.querySelector(".submit-rating");
-  const closeBtn = document.querySelector(".close-rating");
-  const reviewText = document.getElementById("reviewText");
-  const starsInput = document.getElementById("starsInput");
+let selectedRating = 0;
 
-  let selectedRating = 0;
+document.querySelector(".btn.back").onclick = () => {
+  window.location.href = "my-requests.php";
+};
 
-  function goBack() {
-    window.location.href = "my-requests.php";
-  }
+if (document.querySelector(".btn.rate")) {
+  document.querySelector(".btn.rate").onclick = () => {
+    modal.style.display = "flex";
+  };
+}
 
-  function resetRatingForm() {
-    selectedRating = 0;
-    reviewText.value = "";
-    starsInput.value = "";
+document.querySelector(".close-rating").onclick = () => {
+  modal.style.display = "none";
+};
 
-    stars.forEach((star) => {
-      star.classList.remove("fa-solid", "active");
-      star.classList.add("fa-regular");
-    });
-  }
-
-  backBtn.addEventListener("click", goBack);
-  backIcon.addEventListener("click", goBack);
-
-  if (rateBtn) {
-    rateBtn.addEventListener("click", () => {
-      modal.style.display = "flex";
-    });
-  }
-
-  closeBtn.addEventListener("click", () => {
-    modal.style.display = "none";
-    resetRatingForm();
-  });
-
-  stars.forEach((star, index) => {
-    star.addEventListener("mouseover", () => {
-      stars.forEach((s, i) => {
-        s.classList.toggle("fa-solid", i <= index);
-        s.classList.toggle("fa-regular", i > index);
-        s.classList.toggle("active", i <= index);
-      });
-    });
-
-    star.addEventListener("click", () => {
-      selectedRating = index + 1;
-    });
-
-    star.addEventListener("mouseout", () => {
-      stars.forEach((s, i) => {
-        s.classList.toggle("fa-solid", i < selectedRating);
-        s.classList.toggle("fa-regular", i >= selectedRating);
-        s.classList.toggle("active", i < selectedRating);
-      });
-    });
-  });
-
-  submitBtn.addEventListener("click", (event) => {
-    if (selectedRating === 0) {
-      event.preventDefault();
-      alert("Please select a rating");
-      return;
-    }
-
+stars.forEach((star, index) => {
+  star.onclick = () => {
+    selectedRating = index + 1;
     starsInput.value = selectedRating;
-  });
+  };
+});
 </script>
+
 </body>
 </html>

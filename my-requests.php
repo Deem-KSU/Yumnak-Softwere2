@@ -1,5 +1,15 @@
 <?php
 session_start();
+$timeout = 900;
+
+if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $timeout) {
+    session_unset();
+    session_destroy();
+    header("Location: LogIn.html?msg=timeout");
+    exit();
+}
+
+$_SESSION['last_activity'] = time();
 require 'db_connection.php';
 
 if (!isset($_SESSION['user_id'])) {
@@ -71,7 +81,7 @@ function statusClass($status) {
 
     <div class="logout">
         <button onclick="window.location.href='logout.php'">
-            <i class="fas fa-sign-out-alt"></i>
+            <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
             Logout
         </button>
     </div>
@@ -99,7 +109,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'failed') {
             <div class="card-info">
               <div class="card-header">
                 <div class="airport-name">
-                  <i class="fa-solid fa-building"></i>
+                  <i class="fa-solid fa-building" aria-hidden="true"></i>
                   <h3><?= htmlspecialchars($row['AirportName']) ?></h3>
                 </div>
 
@@ -111,7 +121,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'failed') {
               <div class="details">
                 <div>
                   <span class="label">
-                    <i class="fa-solid fa-door-open"></i>
+                    <i class="fa-solid fa-door-open" aria-hidden="true"></i>
                     Gate Number
                   </span>
                   <p><?= htmlspecialchars($row['GateID']) ?></p>
@@ -119,7 +129,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'failed') {
 
                 <div>
                   <span class="label">
-                    <i class="fa-solid fa-wheelchair"></i>
+                    <i class="fa-solid fa-wheelchair" aria-hidden="true"></i>
                     Assistance Type
                   </span>
                   <?php
@@ -134,7 +144,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'failed') {
 
                 <div>
                   <span class="label">
-                    <i class="fa-regular fa-calendar"></i>
+                    <i class="fa-regular fa-calendar" aria-hidden="true"></i>
                     Date & Time
                   </span>
                   <p>
@@ -149,7 +159,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'failed') {
                 type="button" 
                 class="btn details view-btn" 
                 data-id="<?= $row['RequestID'] ?>">
-                <i class="fa-regular fa-eye"></i>
+                <i class="fa-regular fa-eye" aria-hidden="true"></i>
                 View Details
               </button>
 
@@ -158,7 +168,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'failed') {
                   type="button" 
                   class="btn edit edit-btn" 
                   data-id="<?= $row['RequestID'] ?>">
-                  <i class="fa-regular fa-pen-to-square"></i>
+                  <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>
                   Edit
                 </button>
               <?php endif; ?>
@@ -168,7 +178,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'failed') {
                   type="button" 
                   class="btn cancel cancel-btn" 
                   data-id="<?= $row['RequestID'] ?>">
-                  <i class="fa-solid fa-xmark"></i>
+                  <i class="fa-solid fa-xmark" aria-hidden="true"></i>
                   Cancel
                 </button>
               <?php endif; ?>
@@ -181,7 +191,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'failed') {
     </div>
 
     <button type="button" class="add-btn">
-      <i class="fa-solid fa-plus"></i>
+      <i class="fa-solid fa-plus" aria-hidden="true"></i>
       Add New Request
     </button>
   </main>
@@ -190,11 +200,11 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'failed') {
     <div class="footer-content">
       <div class="footer-section">
         <h4>Contact Us</h4>
-        <p><i class="fas fa-envelope"></i> support@yumnak.com</p>
+        <p><i class="fas fa-envelope" aria-hidden="true"></i> support@yumnak.com</p>
         <div class="social-icons">
-          <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
-          <a href="#"><i class="fab fa-linkedin"></i></a>
-          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin" aria-hidden="true"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
         </div>
       </div>
 
