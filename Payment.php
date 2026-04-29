@@ -125,7 +125,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_payment'])) {
             INSERT INTO assistance_request 
             (PreferredTime, Date, ExtraNote, Status, IsPaid, TravelerID, AdminID, AssistantID, GateID)
             VALUES
-            ('$preferredDateTime', NOW(), '$note', 'Pending', 1, $travelerID, NULL, NULL, '$gateID')
+            ('$preferredDateTime', NOW(), '$note', 'Pending', 1, $travelerID, 1, NULL, '$gateID')
         ";
 
         if (mysqli_query($conn, $insertRequest)) {
