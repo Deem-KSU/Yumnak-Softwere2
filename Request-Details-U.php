@@ -272,7 +272,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'invalidRating') {
     <form method="POST">
       <input type="hidden" name="stars" id="starsInput">
       <label>Review</label>
-<textarea name="comment" placeholder="Write your review..."></textarea>
+<textarea name="comment" id="reviewText" placeholder="Write your review..."></textarea>
 
       <div class="rating-actions">
         <button type="submit" class="btn submit-rating">Submit</button>
@@ -286,31 +286,61 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'invalidRating') {
 const modal = document.getElementById("ratingModal");
 const stars = document.querySelectorAll(".stars i");
 const starsInput = document.getElementById("starsInput");
-
 let selectedRating = 0;
+function resetRatingForm() {
+  selectedRating = 0;
+  starsInput.value = "";
+  document.querySelector("textarea[name='comment']").value = "";
+
+  stars.forEach((star) => {
+    star.classList.remove("fa-solid", "active");
+    star.classList.add("fa-regular");
+  });
+}
+
+
 
 document.querySelector(".btn.back").onclick = () => {
   window.location.href = "my-requests.php";
 };
+
 document.querySelector(".back-icon").onclick = () => {
   window.location.href = "my-requests.php";
 };
 
 if (document.querySelector(".btn.rate")) {
   document.querySelector(".btn.rate").onclick = () => {
+    resetRatingForm();
     modal.style.display = "flex";
   };
 }
 
 document.querySelector(".close-rating").onclick = () => {
   modal.style.display = "none";
+  resetRatingForm();
 };
 
 stars.forEach((star, index) => {
-  star.onclick = () => {
-    selectedRating = index + 1;
-    starsInput.value = selectedRating;
-  };
+  star.addEventListener("mouseover", () => {
+    stars.forEach((s, i) => {
+      s.classList.toggle("fa-solid", i <= index);
+      s.classList.toggle("fa-regular", i > index);
+      s.classList.toggle("active", i <= index);
+    });
+  });
+
+  star.addEventListener("click", () => {
+  selectedRating = index + 1;
+  starsInput.value = selectedRating;
+});
+
+  star.addEventListener("mouseout", () => {
+    stars.forEach((s, i) => {
+      s.classList.toggle("fa-solid", i < selectedRating);
+      s.classList.toggle("fa-regular", i >= selectedRating);
+      s.classList.toggle("active", i < selectedRating);
+    });
+  });
 });
 </script>
 
