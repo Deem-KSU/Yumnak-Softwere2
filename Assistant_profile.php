@@ -63,7 +63,12 @@ $reviews_sql = "SELECT r.Stars, r.Comment, r.Date, ar.RequestID, t.UserName
                 AND YEARWEEK(r.Date, 1) = YEARWEEK(CURDATE(), 1)";
 $reviews_result = $conn->query($reviews_sql);
 
-$requests_sql = "SELECT ar.RequestID, a.AirportName, ar.Date, ar.Status, IFNULL(aty.AssistanceName, 'N/A') as AssistanceName 
+$requests_sql = "SELECT 
+                    ar.RequestID, 
+                    a.AirportName, 
+                    ar.Date,
+                    ar.Status, 
+                    GROUP_CONCAT(aty.AssistanceName SEPARATOR ', ') AS AssistanceNames
                  FROM ASSISTANCE_REQUEST ar 
                  LEFT JOIN GATE g ON ar.GateID = g.GateID 
                  LEFT JOIN AIRPORT a ON g.AirportID = a.AirportID 
@@ -71,6 +76,7 @@ $requests_sql = "SELECT ar.RequestID, a.AirportName, ar.Date, ar.Status, IFNULL(
                  LEFT JOIN ASSISTANCE_TYPE aty ON rt.AssistanceTypeID = aty.AssistanceTypeID
                  WHERE ar.AssistantID = $assistant_id 
                  AND YEARWEEK(ar.Date, 1) = YEARWEEK(CURDATE(), 1)
+                 GROUP BY ar.RequestID, a.AirportName, ar.Date, ar.Status
                  ORDER BY ar.Date DESC";
 $requests_result = $conn->query($requests_sql);
 ?>
@@ -195,7 +201,7 @@ $requests_result = $conn->query($requests_sql);
                     <tr>
                         <td>REQ-<?php echo $req['RequestID']; ?></td>
                         <td><?php echo htmlspecialchars($req['AirportName']); ?></td>
-                        <td><?php echo htmlspecialchars($req['AssistanceName']); ?></td>
+                        <td><?php echo htmlspecialchars($req['AssistanceNames'] ?? 'N/A'); ?></td>
                         <td><?php echo date("M d, Y", strtotime($req['Date'])); ?></td>
                         <td><span class="status-badge <?php echo $statusClass; ?>"><?php echo htmlspecialchars($req['Status']); ?></span></td>
                     </tr>
