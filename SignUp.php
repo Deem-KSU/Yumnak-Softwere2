@@ -48,8 +48,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         } else {
 
-            $stmt = $conn->prepare("SELECT UserID FROM TRAVELER WHERE UserName = ? OR Email = ?");
-            $stmt->bind_param("ss", $username, $email);
+            $stmt = $conn->prepare("
+    SELECT UserID FROM TRAVELER 
+    WHERE UserName = ? OR Email = ?
+
+    UNION
+
+    SELECT AdminID FROM ADMIN
+    WHERE UserName = ? OR Email = ?
+");
+$stmt->bind_param("ssss", $username, $email, $username, $email);
             $stmt->execute();
             $result = $stmt->get_result();
 

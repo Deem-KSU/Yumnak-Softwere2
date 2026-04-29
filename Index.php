@@ -91,9 +91,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <h2>Log In</h2>
       <p class="subtitle">Enter your credentials to access your account</p>
 
-      <?php if (!empty($error)) { ?>
-        <div class="form-message error-message"><?php echo htmlspecialchars($error); ?></div>
-      <?php } ?>
+    <?php if (!empty($error)) { ?>
+  <div class="server-error">
+    <?php echo htmlspecialchars($error); ?>
+  </div>
+<?php } ?>
 
       <form method="POST" class="signup-form">
 

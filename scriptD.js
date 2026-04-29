@@ -50,6 +50,17 @@ if (signupForm) {
   const password = document.getElementById("password");
   const confirmPassword = document.getElementById("confirmPassword");
 
+const serverError = document.querySelector(".server-error");
+
+[username, email, phone, dob, password, confirmPassword].forEach(field => {
+  field.addEventListener("input", function () {
+    if (serverError) {
+      serverError.style.display = "none";
+    }
+  });
+});
+
+
   signupForm.addEventListener("submit", function (e) {
     clearMultipleErrors([
       "usernameError",
