@@ -179,7 +179,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_payment'])) {
     </nav>
 
     <div class="logout">
-        <button onclick="window.location.href='LogIn.php'">
+        <button onclick="window.location.href='logout.php'">
             <i class="fas fa-sign-out-alt"></i>
             Logout
         </button>

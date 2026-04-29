@@ -70,7 +70,7 @@ $typeResult = mysqli_query($conn, $typeSql);
     </nav>
 
     <div class="logout">
-        <button onclick="window.location.href='LogIn.php'">
+         <button onclick="window.location.href='logout.php'">
             <i class="fas fa-sign-out-alt"></i>
             Logout
         </button>

@@ -90,7 +90,7 @@ $requestsToday = mysqli_fetch_assoc($todayResult)['count'];
       <img src="Image/Yumnak-Logo.png" alt="Yumnak Logo">
     </div>
     <div class="logout">
-      <button onclick="window.location.href='LogIn.php'">
+      <button onclick="window.location.href='logout.php'">
         <i class="fas fa-sign-out-alt"></i>
         Logout
       </button>
