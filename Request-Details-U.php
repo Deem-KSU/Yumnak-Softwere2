@@ -26,8 +26,13 @@ $travelerID = $_SESSION['user_id'];
 $requestID = $_GET['id'];
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $stars = $_POST['stars'] ?? 0;
-    $comment = $_POST['comment'] ?? '';
+$stars = (int)($_POST['stars'] ?? 0);
+$comment = trim($_POST['comment'] ?? '');
+
+if ($stars < 1 || $stars > 5) {
+    header("Location: Request-Details-U.php?id=$requestID&msg=invalidRating");
+    exit();
+}
 
     // check if review already exists
     $check = "SELECT ReviewID FROM REVIEW WHERE RequestID = ?";
@@ -137,6 +142,9 @@ function statusClass($status) {
 if (isset($_GET['msg']) && $_GET['msg'] == 'reviewed') {
     echo "<script>alert('Thank you for your feedback!');</script>";
 }
+if (isset($_GET['msg']) && $_GET['msg'] == 'invalidRating') {
+    echo "<script>alert('Please provide a valid rating between 1 and 5 stars.');</script>";
+}
 ?>
 
 <h2 class="page-title">
@@ -149,7 +157,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'reviewed') {
 </p>
 
 <div class="status-badge <?= statusClass($request['Status']) ?>">
-  <i class="fa-solid fa-circle-check" aria-hidden="true" aria-label="Status"></i>
+  <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
   <?= htmlspecialchars($request['Status']) ?>
 </div>
 
@@ -185,7 +193,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'reviewed') {
     <div>
       <span>Payment Status</span>
       <p id="paid">
-        <i class="fa-solid fa-check" aria-hidden="true" aria-label="Payment Status"></i>
+        <i class="fa-solid fa-check" aria-hidden="true" ></i>
         <?= $request['IsPaid'] ? 'Paid' : 'Not Paid' ?>
       </p>
     </div>
