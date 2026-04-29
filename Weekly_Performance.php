@@ -48,7 +48,7 @@ $result = $conn->query($sql);
         <img src="Image/Yumnak-Logo.png" alt="Yumnak Logo">
     </div>
     <div class="logout">
-        <button onclick="window.location.href='LogIn.html'">
+        <button onclick="window.location.href='LogIn.php'">
             <i class="fas fa-sign-out-alt"></i>
             Logout
         </button>

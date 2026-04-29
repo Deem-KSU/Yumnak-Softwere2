@@ -216,7 +216,7 @@ while ($typeRow = mysqli_fetch_assoc($typeResult)) {
     </nav>
 
     <div class="logout">
-        <button onclick="window.location.href='LogIn.html'">
+        <button onclick="window.location.href='LogIn.php'">
             <i class="fas fa-sign-out-alt"></i>
             Logout
         </button>
