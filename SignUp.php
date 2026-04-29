@@ -85,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     );
 
                     if ($stmtInsert->execute()) {
-                        header("Location: LogIn.php?success=1");
+                        header("Location: Index.php?success=1");
                         exit();
                     } else {
                         $error = "Something went wrong. Please try again.";
@@ -223,7 +223,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <button type="submit" class="create-btn">Sign Up</button>
 
         <p class="signin-text">
-          Already have an account? <a href="LogIn.php">Sign In</a>
+          Already have an account? <a href="Index.php">Sign In</a>
         </p>
 
       </form>

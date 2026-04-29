@@ -5,7 +5,7 @@ $timeout = 900;
 if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $timeout) {
     session_unset();
     session_destroy();
-    header("Location: LogIn.php?msg=timeout");
+    header("Location: Index.php?msg=timeout");
     exit();
 }
 
@@ -14,7 +14,7 @@ require 'db_connection.php';
 
 
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || $_SESSION['role'] != "user") {
-    header("Location: LogIn.php");
+    header("Location: Index.php");
     exit();
 }
 
@@ -28,7 +28,7 @@ $result = $stmt->get_result();
 if ($result->num_rows != 1) {
     session_unset();
     session_destroy();
-    header("Location: LogIn.php");
+    header("Location: Index.php");
     exit();
 }
 
