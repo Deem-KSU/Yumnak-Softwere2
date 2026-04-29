@@ -313,7 +313,7 @@ $astResult = mysqli_query($conn, $astQuery);
                         </svg>
                         Available Assistants
                     </div>
-                    <p class="assistants-subtitle">Select a suitable assistant who matches the assistance type and is available.</p>
+                    <p class="assistants-subtitle">No suitable assistants are available for this specific disability type</p>
 
                     <div class="assistant-cards-wrapper">
                         <?php while ($ast = mysqli_fetch_assoc($astResult)):
