@@ -16,11 +16,12 @@ $requestID = $_GET['id'];
 $travelerID = $_SESSION['user_id'];
 
 $sql = "
-    UPDATE ASSISTANCE_REQUEST
-    SET Status = 'Cancelled'
-    WHERE RequestID = ?
-    AND TravelerID = ?
-    AND Status IN ('Pending', 'Accepted')
+  UPDATE ASSISTANCE_REQUEST
+SET Status = 'Cancelled',
+    AssistantID = NULL
+WHERE RequestID = ?
+AND TravelerID = ?
+AND Status IN ('Pending', 'Accepted')
 ";
 
 $stmt = mysqli_prepare($conn, $sql);
