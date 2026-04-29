@@ -188,14 +188,14 @@ if (loginForm) {
     e.preventDefault();
 
     if (validateLogin()) {
-      window.location.href = "User-Dashboard.html";
+      window.location.href = "User-Dashboard.php";
     }
   });
 
   if (adminBtn) {
     adminBtn.addEventListener("click", function () {
       if (validateLogin()) {
-        window.location.href = "Admin-Dashboard.html";
+        window.location.href = "Admin-Dashboard.php";
       }
     });
   }
@@ -212,6 +212,6 @@ if (loginForm) {
 }
 
 function goToAddRequest() {
-  window.location.href = "Airport_Selection.html";
+  window.location.href = "Airport_Selection.php";
 }
 

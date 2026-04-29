@@ -44,30 +44,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $error = "Passwords do not match.";
 
         } else {
+$stmt = $conn->prepare("SELECT UserID FROM TRAVELER WHERE UserName = ? OR Email = ?");
+$stmt->bind_param("ss", $username, $email);
+$stmt->execute();
+$result = $stmt->get_result();
 
-            $stmt = $conn->prepare("SELECT UserID FROM TRAVELER WHERE UserName = ? OR Email = ?");
-            $stmt->bind_param("ss", $username, $email);
-            $stmt->execute();
-            $result = $stmt->get_result();
+if ($result->num_rows > 0) {
+    $error = "Registration failed. Please try a different email or username.";
+} else {
+    $stmtPhone = $conn->prepare("SELECT UserID FROM TRAVELER WHERE Phone = ?");
+    $stmtPhone->bind_param("s", $phone);
+    $stmtPhone->execute();
+    $phoneResult = $stmtPhone->get_result();
 
-            if ($result->num_rows > 0) {
-                $error = "Username or Email already exists.";
-            } else {
-                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    if ($phoneResult->num_rows > 0) {
+        $error = "This phone number is already linked to another account.";
+    } else {
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-                $stmt = $conn->prepare("INSERT INTO TRAVELER (UserName, Email, Phone, Password, DOB) VALUES (?, ?, ?, ?, ?)");
-                $stmt->bind_param("sssss", $username, $email, $phone, $hashedPassword, $dob);
+        $stmtInsert = $conn->prepare("INSERT INTO TRAVELER (UserName, Email, Phone, Password, DOB) VALUES (?, ?, ?, ?, ?)");
+        $stmtInsert->bind_param("sssss", $username, $email, $phone, $hashedPassword, $dob);
 
-                if ($stmt->execute()) {
-                    header("Location: LogIn.php?success=1");
-                    exit();
-                } else {
-                    $error = "Something went wrong.";
-                }
-            }
+        if ($stmtInsert->execute()) {
+            header("Location: LogIn.php?success=1");
+            exit();
+        } else {
+            $error = "Something went wrong.";
         }
     }
 }
+           
+            }
+        }
+    }
+
 ?>
 
 <!DOCTYPE html>
