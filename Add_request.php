@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 $timeout = 900;
 
 if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $timeout) {
@@ -11,15 +10,15 @@ if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) >
 }
 
 $_SESSION['last_activity'] = time();
-
 require 'db_connection.php';
 
-if (!isset($_SESSION['admin_id'])) {
+if (!isset($_SESSION['user_id'])) {
     header("Location: Index.php");
     exit();
 }
 
-$adminID = $_SESSION['admin_id'];
+$travelerID = $_SESSION['user_id'];
+
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: Index.php");
