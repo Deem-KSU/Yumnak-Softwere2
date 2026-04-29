@@ -118,6 +118,13 @@ $astQuery = "SELECT a.AssistantID, a.Name, a.Specialization,
                  WHERE ar3.AssistantID = a.AssistantID) AS AvgRating
              FROM ASSISTANT a
              WHERE ($specializationFilter)
+             AND a.AssistantID NOT IN (
+                SELECT ar4.AssistantID
+                FROM ASSISTANCE_REQUEST ar4
+                WHERE DATE(ar4.PreferredTime) = DATE('" . mysqli_real_escape_string($conn, $request['PreferredTime']) . "')
+                AND ar4.Status = 'Accepted'
+                AND ar4.AssistantID IS NOT NULL
+             )
              ORDER BY AvgRating DESC";
 
 $astResult = mysqli_query($conn, $astQuery);
@@ -223,7 +230,7 @@ $astResult = mysqli_query($conn, $astQuery);
                     <table class="detail-table">
                         <tbody>
                             <tr>
-                                <th>Full Name:</th>
+                                <th>UserName:</th>
                                 <td><?php echo htmlspecialchars($request['UserName']); ?></td>
                             </tr>
                             <tr>
