@@ -102,14 +102,14 @@ CREATE TABLE REVIEW (
 -- ==========================================
 
 INSERT INTO TRAVELER (UserName, Email, Phone, Password, DOB) VALUES
-('Tariq Alotaibi', 'tariq@gmail.com', '+966501112222', '$2a$12$GzbsYcvFMRrlKnwwmQsx/OOMX.U0z4d7ccA5Ouzr.P0B7.H5DQ.J2', '1980-05-10'),
-('Sara Alsaud', 'sara@gmail.com', '+966503334444', '$2a$12$upKRTcM3PjHGcYplcJ5hR.58z3tm2anGi.jhRdx.5A.2jotJ3EQX6', '1992-08-15'),
-('Majed Alharbi', 'majed@gmail.com', '+966505556666', '$2a$12$WU65E2Rh4Bb7KbrQAyYsBexJcuaYyC8JkRqFYxu2rGp2opnr1jVMu', '1975-12-01'),
-('Reem Alqahtani', 'reem@gmail.com', '+966507778888', '$2a$12$C0ruSsEHe.TzAzK9.adhA.AhWoiIPoi2eOhj1VdVAD1zLPCaFrEjy', '2000-03-22');
+('tariq_alotaibi', 'tariq@gmail.com', '0501112222', '$2a$12$GzbsYcvFMRrlKnwwmQsx/OOMX.U0z4d7ccA5Ouzr.P0B7.H5DQ.J2', '1980-05-10'),
+('sara_alsaud', 'sara@gmail.com', '0503334444', '$2a$12$upKRTcM3PjHGcYplcJ5hR.58z3tm2anGi.jhRdx.5A.2jotJ3EQX6', '1992-08-15'),
+('majed_alharbi', 'majed@gmail.com', '0505556666', '$2a$12$WU65E2Rh4Bb7KbrQAyYsBexJcuaYyC8JkRqFYxu2rGp2opnr1jVMu', '1975-12-01'),
+('reem_alqahtani', 'reem@gmail.com', '0507778888', '$2a$12$C0ruSsEHe.TzAzK9.adhA.AhWoiIPoi2eOhj1VdVAD1zLPCaFrEjy', '2000-03-22');
 
 -- Insert an Admins
 INSERT INTO ADMIN (UserName, Email, Phone, Password, DOB) VALUES
-('Khalid Abdullah', 'khalid.admin@yumnak.com', '+966555123456', '$2a$12$9xBAvl0GP0Ni9hBxcwwy7OO32gQ56Y1opaTP32pGZ8M0BGaBqcTOS', '1988-02-20');
+('khalid_abdullah', 'khalid.admin@yumnak.com', '0555123456', '$2a$12$9xBAvl0GP0Ni9hBxcwwy7OO32gQ56Y1opaTP32pGZ8M0BGaBqcTOS', '1988-02-20');
 
 -- Insert All 28 Saudi Airports
 INSERT INTO AIRPORT (AirportName, City, ImagePath) VALUES
