@@ -117,7 +117,7 @@ $requestsToday = mysqli_fetch_assoc($todayResult)['count'];
     </aside>
     <main class="admin-main">
       <section class="dashboard-section">
-        <h1 class="dashboard-title">Admin Dashboard</h1>
+        <h1 class="dashboard-title" style="color: black;">Admin Dashboard</h1>
         <p class="dashboard-subtitle">Monitor and manage airport assistance operations</p>
 
         <div class="admin-profile-card">
