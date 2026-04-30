@@ -132,20 +132,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_assistant'])) {
                     </div>
                 </div>
 
-                <div class="form-section">
-                    <div class="section-title"><i class="fa-solid fa-camera"></i> Profile Photo</div>
-                    <div class="upload-area">
-                        <div class="photo-preview" id="photoPreview"><i class="fa-solid fa-user"></i></div>
-                        <div class="upload-controls">
-                            <input type="file" id="imageInput" accept="image/*">
-                            <button type="button" class="btn-upload" onclick="document.getElementById('imageInput').click()">
-                                <i class="fa-solid fa-upload"></i> Upload Photo
-                            </button>
-                            <p>Recommended: Square image, at least 400x400px</p>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="form-actions">
                     <button type="button" class="btn-cancel" onclick="window.location.href='Assistant_Management.php'"><i class="fa-solid fa-xmark"></i> Cancel</button>
                     <button type="submit" name="add_assistant" class="btn-submit"><i class="fa-solid fa-plus"></i> Add Assistant</button>
