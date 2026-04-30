@@ -186,7 +186,8 @@ INSERT INTO ASSISTANCE_REQUEST (PreferredTime, ExtraNote, Status, IsPaid, Travel
 -- Insert 5 Request_Types (Linking the requests to their required assistance)
 INSERT INTO REQUEST_TYPE (AssistanceTypeID, RequestID) VALUES
 (1, 1), -- Request 1 needs Wheelchair
-(2, 1), -- Request 1 needs Visual Guidance
+(2, 1), -- Request 2 needs Visual Guidance
+(3, 2), -- Request 2 needs Hearing Assistance
 (3, 3), -- Request 3 needs Hearing Assistance
 (2, 4), -- Request 4 needs Visual Guidance
 (3, 5); -- Request 5 needs Sign Language Support
