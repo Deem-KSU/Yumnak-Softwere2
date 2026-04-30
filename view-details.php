@@ -64,6 +64,34 @@ $data = $result->fetch_assoc();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yumnak | Request Details </title>
+    <style>
+.assigned-assistant-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 25px;
+  background: #ffffff;
+}
+
+.assigned-assistant-info img {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+}
+
+.assigned-assistant-name {
+  font-weight: 600;
+  color: #111827;
+  padding: 5px 0;
+  margin: 0;
+  font-size: 16px;
+}
+
+.assigned-assistant-info span {
+  color: #6B7280;
+  font-size: 14px;
+}
+</style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="styleF.css">
 </head>
