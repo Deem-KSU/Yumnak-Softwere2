@@ -322,7 +322,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_payment'])) {
     <div class="footer-section">
       <h4>Quick Links</h4>
       <ul class="footer-links">
-        <li><a href="#">Sitemap</a></li>
+        <li><a href="SitemapUser.php">Sitemap</a></li>
         <li><a href="User-Dashboard.php">Dashboard</a></li>
       </ul>
     </div>

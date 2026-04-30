@@ -216,7 +216,7 @@ $requestsToday = mysqli_fetch_assoc($todayResult)['count'];
       <div class="footer-section">
         <h4>Quick Links</h4>
         <ul class="footer-links">
-          <li><a href="#">Sitemap</a></li>
+          <li><a href="sitemapAdmin.php">Sitemap</a></li>
           <li><a href="Admin-Dashboard.php">Dashboard</a></li>
         </ul>
       </div>

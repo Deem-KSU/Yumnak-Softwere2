@@ -211,7 +211,7 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'failed') {
       <div class="footer-section">
         <h4>Quick Links</h4>
         <ul class="footer-links">
-          <li><a href="#">Sitemap</a></li>
+          <li><a href="SitemapUser.php">Sitemap</a></li>
           <li><a href="user-dashboard.php">Dashboard</a></li>
         </ul>
       </div>
