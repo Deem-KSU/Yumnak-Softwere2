@@ -194,7 +194,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_assistant'])) {
                 if (file) {
                     const reader = new FileReader();
                     reader.onload = function(e) {
-                        photoPreview.innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+                        photoPreview.innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;" alt="Assistant Photo">`;
                         photoPreview.style.border = "2px solid #8B6B4A";
                     };
                     reader.readAsDataURL(file);

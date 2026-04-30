@@ -92,7 +92,7 @@ $result = mysqli_query($conn, $sql);
             ?>
 
             <div class="airport-selection-card" data-name="<?php echo $airportName; ?>">
-                <img src="<?php echo $imagePath; ?>" alt="<?php echo $airportName; ?>" class="airport-selection-card-image">
+                <img src="<?php echo $imagePath; ?>" alt="<?php echo $airportName; ?>" class="airport-selection-card-image" >
                 <h3 class="airport-selection-card-title"><?php echo $airportName; ?></h3>
                 <p class="airport-selection-card-location"><?php echo $city; ?>, Saudi Arabia</p>
 
