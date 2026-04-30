@@ -29,7 +29,8 @@ SELECT
     g.GateID,
     a.AirportName,
     GROUP_CONCAT(at.AssistanceName SEPARATOR ', ') AS AssistanceTypes,
-    ass.Name AS AssistantName
+   ass.Name AS AssistantName,
+ass.Specialization AS AssistantSpecialization
 FROM ASSISTANCE_REQUEST ar
 JOIN TRAVELER t ON ar.TravelerID = t.UserID
 JOIN GATE g ON ar.GateID = g.GateID
@@ -147,7 +148,7 @@ $data = $result->fetch_assoc();
                     <table class="detail-table">
                         <tbody>
                             <tr>
-                                <th>Full Name:</th>
+                                <th>UserName:</th>
                                 <td><?php echo htmlspecialchars($data['UserName']); ?></td>
                             </tr>
                             <tr>
@@ -200,11 +201,16 @@ $data = $result->fetch_assoc();
                     </div>
                     <div class="detail-block border-none">
                         <dt>Assistance Type:</dt>
-                        <dd>
-                            <span class="badge purple">
-                                <?php echo htmlspecialchars($data['AssistanceTypes']); ?>
-                            </span>
-                        </dd>
+                       <dd>
+    <?php
+    $types = explode(',', $data['AssistanceTypes'] ?? '');
+    foreach ($types as $type) {
+        if (trim($type) !== '') {
+            echo '<span class="badge purple">' . htmlspecialchars(trim($type)) . '</span> ';
+        }
+    }
+    ?>
+</dd>
                     </div>
                     <div class="detail-block border-none">
                         <dt>Preferred date:</dt>
@@ -218,19 +224,21 @@ $data = $result->fetch_assoc();
                     Assigned Assistant
                 </div>
 
-                <div class="empty-state-container">
-                    <p class="empty-title">
-                        <?php 
-                        echo !empty($data['AssistantName']) 
-                            ? htmlspecialchars($data['AssistantName']) 
-                            : "No assistant assigned yet."; 
-                        ?>
-                    </p>
+             <?php if (!empty($data['AssistantName'])) { ?>
+    <div class="assigned-assistant-info">
+    <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($data['AssistantName']); ?>&background=random" alt="Assigned Assistant">
 
-                    <?php if (empty($data['AssistantName'])) { ?>
-                        <p class="empty-subtitle">Please assign a suitable assistant from the list below.</p>
-                    <?php } ?>
-                </div>
+    <div>
+        <p class="assigned-assistant-name"><?php echo htmlspecialchars($data['AssistantName']); ?></p>
+        <span><?php echo htmlspecialchars($data['AssistantSpecialization']); ?></span>
+    </div>
+</div>
+<?php } else { ?>
+    <div class="empty-state-container">
+        <p class="empty-title">No assistant assigned yet.</p>
+        <p class="empty-subtitle">Please assign a suitable assistant.</p>
+    </div>
+<?php } ?>
             </div>
         </main>
     </div>
